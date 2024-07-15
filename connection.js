@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 // MongoDB Connection
 
-async function mongoDBConnection(dbUrl){
+async function mongoDBConnection(dbUrl) {
     return mongoose.connect(dbUrl)
 }
 
