@@ -1,70 +1,12 @@
+# React + Vite
 
-# URL Shortener Project
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-This is a simple URL shortener web application built using Express.js, EJS, and MongoDB. It allows users to shorten long URLs into more manageable, shortened versions. Users can also sign up for an account to manage their shortened URLs.
+Currently, two official plugins are available:
 
-![Alt url-shortener](https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjYP2TQtdwwqsGXr_fO-jRQVado0fwMOMCXYrk8CsjEWISUi6l2Ao0fZBVUHXKkfzO8IHxnPnVx8brYGb0DGRMc9_pf1_jVPscVkeEQPMPpt5cNKT7YIFp92c5vBjBbACqlb3GV0Qu0Ffy5fB-_h0tV0kIxnTSJUkuhfR0n1I0kHzkZXCznLI5YKeKPGogx/s1481/Screenshot%202024-03-06%20200606.png)
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## Features
+## Expanding the ESLint configuration
 
-- Shorten long URLs into easy-to-share shortened URLs.
-- User authentication system for signup and login.
-- Users can view, edit, and delete their shortened URLs.
-- MongoDB database integration for storing URL data and user information.
-- Responsive design using EJS templates for a seamless user experience on both desktop and mobile devices.
-
-## Installation
-
-1. Clone the repository:
-
-    ```
-    git clone https://github.com/theavnishkumar/url-shortener.git
-    ```
-
-2. Install dependencies:
-
-    ```
-    cd url-shortener
-    npm install
-    ```
-
-3. Set up MongoDB:
-   
-    - Make sure you have MongoDB installed and running locally.
-    - Update the MongoDB connection string in `connection.js` file.
-
-4. Run the application:
-
-    ```
-    npm start
-    ```
-
-5. Access the application in your web browser:
-
-    ```
-    http://localhost:4000
-    ```
-
-## Usage
-
-1. **Sign Up/Login**: Users can sign up for an account or log in if they already have one.
-
-2. **Shorten URL**: After logging in, users can enter a long URL and generate a shortened URL.
-
-3. **Manage URLs**: Users can view, and delete their shortened URLs from their dashboard.
-
-## Dependencies
-
-- Express.js: Web application framework for Node.js.
-- EJS: Embedded JavaScript templating for dynamic HTML generation.
-- MongoDB: Document-oriented NoSQL database for storing URL data and user information.
-- Mongoose: MongoDB object modeling for Node.js.
-- Other dependencies listed in `package.json`.
-
-## Contributing
-
-Contributions are welcome! Feel free to open issues or submit pull requests.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
