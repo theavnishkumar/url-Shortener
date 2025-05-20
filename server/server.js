@@ -9,6 +9,7 @@ import authRouter from "./routes/auth.js"
 import userRouter from "./routes/user.js"
 import { secureRoute } from "./middlewares/auth.js";
 
+connectDB();
 
 
 // eslint-disable-next-line no-undef
@@ -22,11 +23,10 @@ app.use(cors({
     credentials: true,
 }));
 
-connectDB();
 
-app.use('/', authRouter);
+app.use('/auth/', authRouter);
 app.use('/url/', secureRoute, urlRouter);
-app.use('/user', secureRoute, userRouter)
+app.use('/user/', secureRoute, userRouter)
 
 app.get('/test', async (req, res) => {
     res.send("hello");

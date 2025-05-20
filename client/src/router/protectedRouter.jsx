@@ -2,19 +2,15 @@ import ErrorPage from "../ErrorPage";
 import Home from "../pages/Home";
 import MainLayout from "../layout/MainLayout";
 
-export const mainRouter = [
+export const protectedRouter = [
   {
     path: "/",
     element: <MainLayout />,
     errorElement: <ErrorPage />,
     children: [
       {
-        index: true,
+        path:"/create",
         element: <Home />,
-      },
-      {
-        path: "*",
-        element: <ErrorPage />,
       },
     ],
   },

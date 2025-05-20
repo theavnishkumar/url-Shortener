@@ -9,6 +9,7 @@ import {
   X,
   ChevronDown,
   UserCircle,
+  LinkIcon,
 } from "lucide-react";
 import { AuthContext } from "../contexts/AuthContext";
 
@@ -67,7 +68,7 @@ export default function Navbar() {
           <div className="flex justify-between items-center">
             {/* Logo */}
             <Link to="/" className="flex items-center space-x-2">
-              <Code className="h-6 w-6 text-gray-700 " />
+              <LinkIcon className="h-6 w-6 text-gray-700 " />
               <span className="text-xl font-bold text-gray-900 ">
                 URL Shortener
               </span>
@@ -110,8 +111,8 @@ export default function Navbar() {
               </div>
             </div>
           </div> */}
-              <Link to="#" className="text-gray-700 hover:text-gray-900">
-                About
+              <Link to="/create" className="text-gray-700 hover:text-gray-900">
+                Create
               </Link>
               <Link to="#" className="text-gray-700 hover:text-gray-900">
                 Contact
@@ -288,11 +289,11 @@ export default function Navbar() {
             <li></li>
             <li>
               <Link
-                to="#"
+                to="/create"
                 className="block py-2 text-gray-700  hover:text-gray-900 font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
-                About
+                Create
               </Link>
             </li>
             <li>

@@ -10,15 +10,16 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setIsLoading] = useState(true);
 
-  const fetchUser = async () => {
+  const fetchUser = () => {
     axios
       .get(`${USER_API}`, { withCredentials: true })
       .then((res) => {
         setUser(res.data.user);
-        setIsLoading(false);
       })
       .catch(() => {
         setUser(null);
+      })
+      .finally(() => {
         setIsLoading(false);
       });
   };
@@ -27,7 +28,6 @@ export const AuthProvider = ({ children }) => {
     fetchUser();
   }, []);
 
-  // const login = (userData) => setUser(userData);
   const logout = () => {
     axios
       .post(`${AUTH_API}/logout`, {}, { withCredentials: true })

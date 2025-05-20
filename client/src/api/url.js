@@ -1,0 +1,37 @@
+import axios from "axios";
+const URL_API = import.meta.env.VITE_URL_API;
+
+export const saveShortUrl = async (originalUrl) => {
+    try {
+        const res = await axios.post(
+            `${URL_API}/create`,
+            { originalUrl },
+            { withCredentials: true }
+        );
+        return res.data;
+    } catch (error) {
+        console.log("Error creating short url", error.response?.data || error.message)
+    }
+}
+
+export const getUrlData = async () => {
+    try {
+        const res = await axios.get(`${URL_API}`,
+            { withCredentials: true }
+        );
+        return res.data;
+    } catch (error) {
+        console.log("Error on getting url data", error.message);
+    }
+}
+
+export const deleteUrl = async (_id) => {
+    try {
+        const res = await axios.delete(`${URL_API}/${_id}`,
+            { withCredentials: true }
+        );
+        return res.data;
+    } catch (error) {
+        console.log("Error on deleting url data", error.message);
+    }
+}
