@@ -8,6 +8,7 @@ import urlRouter from "./routes/url.js";
 import authRouter from "./routes/auth.js"
 import userRouter from "./routes/user.js"
 import { secureRoute } from "./middlewares/auth.js";
+import redirectUrlRouter from "./routes/redirectUrl.js";
 
 connectDB();
 
@@ -23,7 +24,7 @@ app.use(cors({
     credentials: true,
 }));
 
-
+app.use('/redirect/', redirectUrlRouter);
 app.use('/auth/', authRouter);
 app.use('/url/', secureRoute, urlRouter);
 app.use('/user/', secureRoute, userRouter)

@@ -9,13 +9,14 @@ import { LoadingSpinner } from "../components/LoadingSpinner";
 const Dashboard = () => {
   const { user } = useContext(AuthContext);
 
-  const getUrl = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["shortUrls"],
     queryFn: getUrlData,
   });
 
-  const uData = Array.isArray(getUrl.data) ? getUrl.data : [];
-  if (getUrl.isLoading) return <LoadingSpinner />;
+  const totalClicks = data?.reduce((sum, item) => sum + item.clicksCount, 0);
+
+  if (isLoading) return <LoadingSpinner />;
   return (
     <main className="p-4 sm:p-6 lg:p-8">
       <div className="mb-6">
@@ -31,13 +32,13 @@ const Dashboard = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
         <div className="bg-white p-6 rounded-md shadow-sm border border-gray-200">
           <p className="text-sm font-medium text-gray-500 mb-1">Total URLs</p>
-          <p className="text-2xl font-bold">{uData.length}</p>
+          <p className="text-2xl font-bold">{data.length}</p>
           {/* <p className="text-xs text-green-500 mt-2">↑ 0% from last month</p> */}
         </div>
 
         <div className="bg-white p-6 rounded-md shadow-sm border border-gray-200">
           <p className="text-sm font-medium text-gray-500 mb-1">Total Clicks</p>
-          <p className="text-2xl font-bold">{uData.clicksCount || 0}</p>
+          <p className="text-2xl font-bold">{totalClicks}</p>
           {/* <p className="text-xs text-green-500 mt-2">↑ 0% from last month</p> */}
         </div>
 
@@ -46,14 +47,14 @@ const Dashboard = () => {
             Avg. Click Rate
           </p>
           <p className="text-2xl font-bold">
-            {(uData.clicksCount / uData.length)||0}
+            {data.length ? (totalClicks / data.length).toFixed(2) : 0}
           </p>
           {/* <p className="text-xs text-green-500 mt-2">↑ 0% from last month</p> */}
         </div>
 
         <div className="bg-white p-6 rounded-md shadow-sm border border-gray-200">
           <p className="text-sm font-medium text-gray-500 mb-1">Active URLs</p>
-          <p className="text-2xl font-bold">{uData.length}</p>
+          <p className="text-2xl font-bold">{data.length}</p>
           {/* <p className="text-xs text-green-500 mt-2">↑ 0% from last month</p> */}
         </div>
       </div>

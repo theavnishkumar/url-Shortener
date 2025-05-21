@@ -1,5 +1,6 @@
 import axios from "axios";
 const URL_API = import.meta.env.VITE_URL_API;
+const VITE_BASE_API = import.meta.env.VITE_BASE_API;
 
 export const saveShortUrl = async (originalUrl) => {
     try {
@@ -33,5 +34,15 @@ export const deleteUrl = async (_id) => {
         return res.data;
     } catch (error) {
         console.log("Error on deleting url data", error.message);
+    }
+}
+
+export const redirectUrl = async (shortId) => {
+    try {
+        const res = await axios.get(`${VITE_BASE_API}/redirect/${shortId}`);
+        return res.data;
+    } catch (error) {
+        console.error("Error while redirecting:", error.message);
+        throw new Error("Short URL not found");
     }
 }

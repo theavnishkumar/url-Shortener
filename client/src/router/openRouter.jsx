@@ -1,9 +1,10 @@
-import { Children } from "react";
 import ErrorPage from "../ErrorPage";
 import OpenLayout from "../layout/OpenLayout";
 import Login from "../pages/Login";
 import Signup from "../pages/Signup";
 import Landing from "../pages/Landing";
+import About from "../pages/About";
+import Contact from "../pages/Contact";
 
 export const openRouter = [
   {
@@ -22,6 +23,14 @@ export const openRouter = [
       {
         path: "signup",
         element: <Signup />,
+      },
+      {
+        path: "about",
+        element: <About />,
+      },
+      {
+        path: "contact",
+        element: <Contact />,
       },
     ],
   },
