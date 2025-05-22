@@ -77,7 +77,7 @@ const Dashboard = () => {
           </Link>
 
           <Link
-            to="#"
+            to="/view"
             className="bg-white p-6 rounded-md shadow-sm border border-gray-200 flex flex-col items-center text-center hover:border-indigo-500 transition-colors"
           >
             <div className="bg-indigo-100 p-3 rounded-full mb-3">
@@ -88,7 +88,7 @@ const Dashboard = () => {
           </Link>
 
           <Link
-            to="#"
+            to="/analytics"
             className="bg-white p-6 rounded-md shadow-sm border border-gray-200 flex flex-col items-center text-center hover:border-indigo-500 transition-colors"
           >
             <div className="bg-indigo-100 p-3 rounded-full mb-3">
@@ -99,7 +99,7 @@ const Dashboard = () => {
           </Link>
 
           <Link
-            to="#"
+            to="/profile"
             className="bg-white p-6 rounded-md shadow-sm border border-gray-200 flex flex-col items-center text-center hover:border-indigo-500 transition-colors"
           >
             <div className="bg-indigo-100 p-3 rounded-full mb-3">

@@ -1,6 +1,9 @@
 import ErrorPage from "../ErrorPage";
-import Home from "../pages/Home";
+import CreateURL from "../pages/CreateURL";
 import MainLayout from "../layout/MainLayout";
+import Profile from "../pages/Profile";
+import ViewURL from "../pages/ViewURL";
+import Analytics from "../pages/Analytics";
 
 export const protectedRouter = [
   {
@@ -9,8 +12,20 @@ export const protectedRouter = [
     errorElement: <ErrorPage />,
     children: [
       {
-        path:"/create",
-        element: <Home />,
+        path: "/create",
+        element: <CreateURL />,
+      },
+      {
+        path: "/profile",
+        element: <Profile />,
+      },
+      {
+        path: "/view",
+        element: <ViewURL />,
+      },
+      {
+        path: "/analytics",
+        element: <Analytics />,
       },
     ],
   },

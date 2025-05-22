@@ -1,14 +1,7 @@
-import React from "react";
 import { ExternalLink, Copy, Share2, BarChart2, Trash2 } from "lucide-react";
+import { Link } from "react-router";
 
-const URLTable = ({
-  item,
-  handleClick,
-  handleCopy,
-  handleShare,
-  handleAnalytics,
-  handleDelete,
-}) => {
+const URLTable = ({ item, handleCopy, handleShare, handleDelete }) => {
   return (
     <div className="bg-white rounded-md shadow border border-gray-200 p-4">
       <div className="flex flex-col space-y-3">
@@ -35,7 +28,6 @@ const URLTable = ({
             href={`/${item.shortId}`}
             target="_blank"
             rel="noopener noreferrer"
-            onClick={() => handleClick(item._id)}
             className="text-indigo-600 hover:underline text-sm font-medium"
           >
             {window.location.origin}/{item.shortId}
@@ -62,13 +54,13 @@ const URLTable = ({
             >
               <Share2 size={16} />
             </button>
-            <button
-              onClick={() => handleAnalytics(item._id)}
+            <Link
+              to="/analytics"
               className="p-1 text-gray-400 hover:text-gray-600"
               title="View Analytics"
             >
               <BarChart2 size={16} />
-            </button>
+            </Link>
             <button
               onClick={() => handleDelete(item._id)}
               className="p-1 text-gray-400 hover:text-gray-600"
