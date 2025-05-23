@@ -3,6 +3,7 @@ import { Outlet, useNavigate } from "react-router";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { AuthContext } from "../contexts/AuthContext";
+import ScrollToTop from "../utils/ScrollToTop";
 
 const MainLayout = () => {
   const navigate = useNavigate();
@@ -25,6 +26,7 @@ const MainLayout = () => {
 
   return (
     <>
+    <ScrollToTop />
       <Navbar />
       <Outlet/>
       <Footer />
