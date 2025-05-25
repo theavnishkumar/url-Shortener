@@ -2,6 +2,7 @@ import { nanoid } from "nanoid";
 import urlData from "../models/urlData.js";
 import { getClientIp, getLocationFromIp } from "../utils/geoDetails.js";
 import mongoose from "mongoose";
+import { connectDB } from "../connection.js";
 
 
 
@@ -13,6 +14,7 @@ export async function handleGenerateUrl(req, res) {
     }
 
     try {
+        await connectDB();
         const shortId = nanoid(6);
         const ip = getClientIp(req);
         const userAgent = req.headers["user-agent"];
@@ -42,6 +44,7 @@ export async function handleGenerateUrl(req, res) {
 
 export const handleGetUrl = async (req, res) => {
     try {
+        await connectDB();
         const userData = await urlData.aggregate([
             {
                 $match: {
@@ -74,6 +77,7 @@ export const handleGetUrl = async (req, res) => {
 
 export async function handleDeleteUrl(req, res) {
     try {
+        await connectDB();
         const { _id } = req.params;
 
         const deletedUrl = await urlData.findByIdAndDelete(_id);
@@ -88,3 +92,130 @@ export async function handleDeleteUrl(req, res) {
         res.status(500).json({ message: "Server error" });
     }
 }
+
+
+// I have generate this aggregation using chatGPT
+export const getUrlAnalytics = async (req, res) => {
+    await connectDB();
+
+    const userId = req.user.id;
+    const now = new Date();
+    const startOfToday = new Date(now.setHours(0, 0, 0, 0));
+    const startOfYesterday = new Date(now.setDate(now.getDate() - 1));
+    const startOf7Days = new Date(now.setDate(now.getDate() - 6));
+    const startOf30Days = new Date(now.setDate(now.getDate() - 23));
+
+    try {
+        const analytics = await urlData.aggregate([
+            { $match: { createdBy: new mongoose.Types.ObjectId(userId) } },
+            { $unwind: "$clicks" },
+
+            {
+                $facet: {
+                    today: [
+                        { $match: { "clicks.clickedAt": { $gte: startOfToday } } },
+                        { $count: "count" }
+                    ],
+                    yesterday: [
+                        {
+                            $match: {
+                                "clicks.clickedAt": {
+                                    $gte: startOfYesterday,
+                                    $lt: startOfToday
+                                }
+                            }
+                        },
+                        { $count: "count" }
+                    ],
+                    last7Days: [
+                        { $match: { "clicks.clickedAt": { $gte: startOf7Days } } },
+                        { $count: "count" }
+                    ],
+                    last30Days: [
+                        { $match: { "clicks.clickedAt": { $gte: startOf30Days } } },
+                        { $count: "count" }
+                    ],
+                    countryStats: [
+                        {
+                            $group: {
+                                _id: "$clicks.location.country",
+                                count: { $sum: 1 }
+                            }
+                        },
+                        { $sort: { count: -1 } }
+                    ],
+                    deviceStats: [
+                        {
+                            $group: {
+                                _id: {
+                                    $cond: [
+                                        {
+                                            $regexMatch: {
+                                                input: "$clicks.userAgent",
+                                                regex: /(Mobi|Android|iPhone|iPad)/i
+                                            }
+                                        },
+                                        "Mobile",
+                                        "Desktop"
+                                    ]
+                                },
+                                count: { $sum: 1 }
+                            }
+                        }
+                    ],
+                    browserStats: [
+                        {
+                            $group: {
+                                _id: {
+                                    $switch: {
+                                        branches: [
+                                            {
+                                                case: { $regexMatch: { input: "$clicks.userAgent", regex: /Chrome/i } },
+                                                then: "Chrome"
+                                            },
+                                            {
+                                                case: { $regexMatch: { input: "$clicks.userAgent", regex: /Firefox/i } },
+                                                then: "Firefox"
+                                            },
+                                            {
+                                                case: { $regexMatch: { input: "$clicks.userAgent", regex: /Safari/i } },
+                                                then: "Safari"
+                                            },
+                                            {
+                                                case: { $regexMatch: { input: "$clicks.userAgent", regex: /Edg/i } },
+                                                then: "Edge"
+                                            },
+                                            {
+                                                case: { $regexMatch: { input: "$clicks.userAgent", regex: /OPR|Opera/i } },
+                                                then: "Opera"
+                                            }
+                                        ],
+                                        default: "Other"
+                                    }
+                                },
+                                count: { $sum: 1 }
+                            }
+                        },
+                        { $sort: { count: -1 } }
+                    ]
+                }
+            }
+
+        ]);
+
+        const result = analytics[0];
+
+        res.json({
+            today: result.today[0]?.count || 0,
+            yesterday: result.yesterday[0]?.count || 0,
+            last7Days: result.last7Days[0]?.count || 0,
+            last30Days: result.last30Days[0]?.count || 0,
+            countryStats: result.countryStats,
+            deviceStats: result.deviceStats,
+            browserStats: result.browserStats
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Analytics aggregation failed" });
+    }
+};

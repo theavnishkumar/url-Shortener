@@ -5,6 +5,7 @@ import { Logins } from "../models/Logins.js";
 import { generateToken } from "../utils/jwt.js";
 import { getClientIp, getLocationFromIp } from "../utils/geoDetails.js";
 import dotenv from "dotenv"
+import { connectDB } from "../connection.js";
 dotenv.config();
 
 export const handleUserLogin = async (req, res) => {
@@ -14,6 +15,7 @@ export const handleUserLogin = async (req, res) => {
     if (!email || !password) return res.status(400).json({ error: "All Fields are required" });
 
     try {
+        await connectDB();
         const user = await Users.findOne({ email });
 
         // Checking existing user
@@ -69,6 +71,7 @@ export const handleUserSignup = async (req, res) => {
         return res.status(400).json({ error: "All fields are required" });
     }
     try {
+        await connectDB();
         const existingUser = await Users.findOne({ email });
 
         // Checking existing of user

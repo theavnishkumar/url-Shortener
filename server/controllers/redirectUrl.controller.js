@@ -1,10 +1,12 @@
 import urlData from "../models/urlData.js";
 import { getClientIp, getLocationFromIp } from "../utils/geoDetails.js";
+import { connectDB } from "../connection.js";
 
 export const handleGetRedirectUrl = async (req, res) => {
     const { id } = req.params;
 
     try {
+        await connectDB();
         const RedirectURL = await urlData.findOne({ shortId: id }).select("originalUrl clicks");
         if (!RedirectURL) return res.status(404).json({ message: "No Short URL" });
         const ip = getClientIp(req);

@@ -1,8 +1,10 @@
 import { Users } from "../models/users.js"
+import { connectDB } from "../connection.js";
 
 
 export const handleGetUser = async (req, res) => {
     try {
+        await connectDB();
         const user = await Users.findById(req.user.id).select("name email avatar");
 
         if (!user) {
@@ -16,8 +18,8 @@ export const handleGetUser = async (req, res) => {
     }
 }
 
-export const handleDeleteUser=async(req,res)=>{
-    const id=req.id;
+export const handleDeleteUser = async (req, res) => {
+    const id = req.id;
     console.log(id);
-    return res.status(200).json({message:"OK"})
+    return res.status(200).json({ message: "OK" })
 }
