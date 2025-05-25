@@ -11,12 +11,12 @@ A secure and full-featured URL shortener app built with **MERN stack** (MongoDB,
 
 ## Tech Stack
 
-- **Frontend**: React 19 + Vite + TailwindCSS  
-- **Backend**: Node.js + Express 5 + MongoDB  
+- **Frontend**: React 19, Vite, TailwindCSS  
+- **Backend**: Node.js, Express 5, MongoDB  
 - **State Management**: React Query  
 - **Routing**: React Router v7 (ESM-based imports)  
 - **Security**: HTTPS-only cookies, JWT Auth, IP logging  
-- **UI Components**: TailwindCSS, Lucide Icons
+- **UI Components**: TailwindCSS, Lucide Icons, QR Code Generator
 
 ---
 
@@ -26,11 +26,23 @@ A secure and full-featured URL shortener app built with **MERN stack** (MongoDB,
 - Shortens any valid URL (adds `https://` automatically if missing).
 - Uses `nanoid` to generate unique short IDs.
 - Only logged-in users can create short URLs.
+- Displays QR code for every shortened URL
 
-### Mini Dashboard
+### Dashboard
 - View total links, active links, total clicks, and click-through rate.
-- Slice preview of latest 5 shortened URLs.
+- Preview of shortened URLs.
 - Copy / Share / Delete options.
+
+### Analytics
+
+- Click tracking per link: logs IP address, ISP, device, country, state, and city.
+- Users can view detailed analytics at `/analytics`.
+- Live count of total clicks and click sources.
+
+### QR Code Support
+
+- Each short URL includes a generated QR code.
+- Easy to scan and share offline or across devices.
 
 ### Click Tracking
 - Logs the IP address, ISP, location (country/state/city), and device used on each click.
@@ -85,10 +97,11 @@ npm run dev
 Create a `.env` file in `client/`:
 
 ```env
-VITE_AUTH_API=http://localhost:3000/auth
-VITE_USER_API=http://localhost:3000/user
-VITE_URL_API=http://localhost:3000/url
 VITE_BASE_API=http://localhost:3000
+VITE_URL_API=http://localhost:3000/url
+VITE_USER_API=http://localhost:3000/user
+VITE_AUTH_API=http://localhost:3000/auth
+VITE_ANALYTICS_API=http://localhost:3000/url/analytics
 ```
 
 ---
@@ -121,10 +134,9 @@ url-Shortener/
 
 ## Upcoming Features
 
-- Full URL analytics (graphs, device types, countries).
 - Email alerts for logins.
 - OTP-based email verification (via Resend).
-- 🗃Export click data and analytics to CSV/Excel.
+- Export click data and analytics to CSV/Excel.
 
 ---
 
