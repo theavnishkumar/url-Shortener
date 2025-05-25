@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { Link } from "react-router";
+import { Link, NavLink } from "react-router";
 import {
   Code,
   User,
@@ -10,6 +10,12 @@ import {
   ChevronDown,
   UserCircle,
   LinkIcon,
+  LayoutDashboard,
+  Link2,
+  Eye,
+  ChartSpline,
+  Mail,
+  Scale,
 } from "lucide-react";
 import { AuthContext } from "../contexts/AuthContext";
 
@@ -64,7 +70,7 @@ export default function Navbar() {
   return (
     <>
       <header className="bg-white shadow-sm sticky top-0 z-40">
-        <div className="container mx-auto px-4 py-4">
+        <div className="container mx-auto px-2 py-4">
           <div className="flex justify-between items-center">
             {/* Logo */}
             <Link to="/" className="flex items-center space-x-2">
@@ -76,53 +82,22 @@ export default function Navbar() {
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center space-x-6">
-              <Link to="/" className="text-gray-700 hover:text-gray-900">
-                Home
-              </Link>
-              {/* Drop Down Menu */}
-              {/* <div className="relative group">
-            <button className="flex items-center text-gray-600 hover:text-gray-900">
-              Cheatsheets
-              <ChevronDown className="ml-1 h-4 w-4" />
-            </button>
-            <div className="absolute left-0 top-full mt-1 w-48 rounded-md bg-white shadow-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-              <div className="py-1">
-                <Link to="/cheatsheets/dsa" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                  Data Structures & Algorithms
-                </Link>
-                <Link to="/cheatsheets/os" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                  Operating Systems
-                </Link>
-                <Link
-                  to="/cheatsheets/networking"
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              {(user ? navMenu.slice(0, 4) : navMenu.slice(7)).map((item) => (
+                <NavLink
+                  to={item.link}
+                  key={item.link}
+                  className={({ isActive }) =>
+                    isActive
+                      ? "text-indigo-700 hover:text-indigo-900"
+                      : "text-gray-700 hover:text-gray-900"
+                  }
                 >
-                  Computer Networks
-                </Link>
-                <Link to="/cheatsheets/dbms" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                  Database Management
-                </Link>
-                <Link
-                  to="/cheatsheets/programming"
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                >
-                  Programming Languages
-                </Link>
-              </div>
-            </div>
-          </div> */}
-              <Link to="/create" className="text-gray-700 hover:text-gray-900">
-                Create
-              </Link>
-              <Link to="#" className="text-gray-700 hover:text-gray-900">
-                Contact
-              </Link>
-              <Link to="#" className="text-gray-700 hover:text-gray-900">
-                Legal
-              </Link>
+                  {item.name}
+                </NavLink>
+              ))}
             </nav>
 
-            {/* Desktop Auth/Profile */}
+            {/* Desktop Profile Dropdown*/}
             <div className="flex items-center space-x-4">
               {user ? (
                 <div className="relative hidden md:flex" data-profile-menu>
@@ -164,7 +139,7 @@ export default function Navbar() {
                         </p>
                       </div>
                       <Link
-                        to="/#"
+                        to="/profile"
                         className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 "
                         onClick={() => setIsProfileOpen(false)}
                       >
@@ -172,7 +147,7 @@ export default function Navbar() {
                         Your Profile
                       </Link>
                       <Link
-                        to="/#"
+                        to="/settings"
                         className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 "
                         onClick={() => setIsProfileOpen(false)}
                       >
@@ -193,20 +168,7 @@ export default function Navbar() {
                   )}
                 </div>
               ) : (
-                <>
-                  <Link
-                    to="/login"
-                    className="px-4 py-2 text-gray-700  border border-gray-300 rounded-md hover:bg-gray-100 transition-colors hidden md:block"
-                  >
-                    Log in
-                  </Link>
-                  <Link
-                    to="/signup"
-                    className="px-4 py-2 bg-indigo-800 text-white  rounded-md hover:bg-indigo-700 transition-colors hidden md:block"
-                  >
-                    Sign up
-                  </Link>
-                </>
+                <LoginSignup />
               )}
 
               {/* Mobile Menu Button */}
@@ -276,67 +238,43 @@ export default function Navbar() {
 
         <nav className="p-4">
           <ul className="space-y-1">
-            <li>
-              <Link
-                to="/"
-                className="block py-2 text-gray-700  hover:text-gray-900 font-medium"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Home
-              </Link>
-            </li>
-            <li></li>
-            <li></li>
-            <li>
-              <Link
-                to="/create"
-                className="block py-2 text-gray-700  hover:text-gray-900 font-medium"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Create
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="#"
-                className="block py-2 text-gray-700  hover:text-gray-900 font-medium"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Contact
-              </Link>
-              <Link
-                to="#"
-                className="block py-2 text-gray-700  hover:text-gray-900 font-medium"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Legal
-              </Link>
-            </li>
+            {(user ? navMenu.slice(0, 4) : navMenu.slice(7)).map((item) => (
+              <li key={item.link}>
+                <NavLink
+                  to={item.link}
+                  className={({ isActive }) =>
+                    isActive
+                      ? "flex items-center py-2 text-indigo-700  hover:text-indigo-900 font-medium"
+                      : "flex items-center py-2 text-gray-700  hover:text-gray-900 font-medium"
+                  }
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {item.icon}
+                  {item.name}
+                </NavLink>
+              </li>
+            ))}
           </ul>
 
           {user ? (
             <div className="mt-6 pt-6 border-t border-gray-200 ">
               <ul className="space-y-4">
-                <li>
-                  <Link
-                    to="/#"
-                    className="flex items-center py-2 text-gray-700  hover:text-gray-900 font-medium"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    <User className="mr-3 h-5 w-5" />
-                    Your Profile
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/#"
-                    className="flex items-center py-2 text-gray-700  hover:text-gray-900 font-medium"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    <Settings className="mr-3 h-5 w-5" />
-                    Settings
-                  </Link>
-                </li>
+                {navMenu.slice(4, 7).map((item) => (
+                  <li key={item.link}>
+                    <NavLink
+                      to={item.link}
+                      className={({ isActive }) =>
+                        isActive
+                          ? "flex items-center py-2 text-indigo-700  hover:text-indigo-900 font-medium"
+                          : "flex items-center py-2 text-gray-700  hover:text-gray-900 font-medium"
+                      }
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      {item.icon}
+                      {item.name}
+                    </NavLink>
+                  </li>
+                ))}
                 <li>
                   <button
                     className="flex items-center w-full py-2 text-gray-700  hover:text-gray-900 font-medium text-left cursor-pointer"
@@ -374,3 +312,79 @@ export default function Navbar() {
     </>
   );
 }
+export const LoginSignup = () => {
+  return (
+    <>
+      <Link
+        to="/login"
+        className="px-4 py-2 text-gray-700  border border-gray-300 rounded-md hover:bg-gray-100 transition-colors hidden md:block"
+      >
+        Log in
+      </Link>
+      <Link
+        to="/signup"
+        className="px-4 py-2 bg-indigo-800 text-white  rounded-md hover:bg-indigo-700 transition-colors hidden md:block"
+      >
+        Sign up
+      </Link>
+    </>
+  );
+};
+
+const navMenu = [
+  {
+    name: "Dashboard",
+    link: "/",
+    icon: <LayoutDashboard className="mr-3 h-5 w-5" />,
+  },
+  {
+    name: "Create Links",
+    link: "/create",
+    icon: <Link2 className="mr-3 h-5 w-5" />,
+  },
+  {
+    name: "View Links",
+    link: "/view",
+    icon: <Eye className="mr-3 h-5 w-5" />,
+  },
+  {
+    name: "Analytics",
+    link: "/analytics",
+    icon: <ChartSpline className="mr-3 h-5 w-5" />,
+  },
+  {
+    name: "Contact",
+    link: "/contact",
+    icon: <Mail className="mr-3 h-5 w-5" />,
+  },
+  {
+    name: "Profile",
+    link: "/profile",
+    icon: <User className="mr-3 h-5 w-5" />,
+  },
+  {
+    name: "Settings",
+    link: "/settings",
+    icon: <Settings className="mr-3 h-5 w-5" />,
+  },
+  {
+    name: "Home",
+    link: "/",
+    icon: <User className="mr-3 h-5 w-5" />,
+  },
+  {
+    name: "About",
+    link: "/about",
+    icon: <User className="mr-3 h-5 w-5" />,
+  },
+  {
+    name: "Contact",
+    link: "/contact",
+    icon: <Mail className="mr-3 h-5 w-5" />,
+  },
+  {
+    name: "Legal",
+    link: "/legal",
+    icon: <Scale className="mr-3 h-5 w-5" />,
+  },
+];

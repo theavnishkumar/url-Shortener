@@ -14,9 +14,10 @@ const Dashboard = () => {
     queryFn: getUrlData,
   });
 
+  if (isLoading) return <LoadingSpinner />;
+
   const totalClicks = data?.reduce((sum, item) => sum + item.clicksCount, 0);
 
-  if (isLoading) return <LoadingSpinner />;
   return (
     <main className="p-4 sm:p-6 lg:p-8">
       <div className="mb-6">
@@ -29,7 +30,7 @@ const Dashboard = () => {
       </div>
 
       {/* Stats overview */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
         <div className="bg-white p-6 rounded-md shadow-sm border border-gray-200">
           <p className="text-sm font-medium text-gray-500 mb-1">Total URLs</p>
           <p className="text-2xl font-bold">{data.length}</p>
@@ -64,7 +65,7 @@ const Dashboard = () => {
         <h2 className="text-lg font-medium text-gray-900 mb-4">
           Quick Actions
         </h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           <Link
             to="/create"
             className="bg-white p-6 rounded-md shadow-sm border border-gray-200 flex flex-col items-center text-center hover:border-indigo-500 transition-colors"

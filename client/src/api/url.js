@@ -1,6 +1,7 @@
 import axios from "axios";
 const URL_API = import.meta.env.VITE_URL_API;
 const VITE_BASE_API = import.meta.env.VITE_BASE_API;
+const VITE_ANALYTICS_API = import.meta.env.VITE_ANALYTICS_API;
 
 export const saveShortUrl = async (originalUrl) => {
     try {
@@ -44,5 +45,17 @@ export const redirectUrl = async (shortId) => {
     } catch (error) {
         console.error("Error while redirecting:", error.message);
         throw new Error("Short URL not found");
+    }
+}
+
+export const getUrlAnalytics = async () => {
+    try {
+        const res = await axios.get(`${VITE_ANALYTICS_API}`,
+            { withCredentials: true }
+        );
+        return res.data;
+    } catch (error) {
+        console.error("Error showing analytics:", error.message);
+        throw new Error("Analytics not found");
     }
 }

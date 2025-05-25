@@ -7,7 +7,6 @@ import ErrorPage from "../ErrorPage";
 
 const ShortURL = () => {
   const { shortId } = useParams();
-  console.log(shortId);
   const { data, isLoading, isError } = useQuery({
     queryKey: ["redirect", shortId],
     queryFn: () => redirectUrl(shortId),

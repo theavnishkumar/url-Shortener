@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { saveShortUrl, getUrlData, deleteUrl } from "../api/url";
 import URLTable from "../components/ui/URLTable";
 import { useRef } from "react";
+import { Link } from "react-router";
 
 export default function CreateURL() {
   const queryClient = useQueryClient();
@@ -89,6 +90,10 @@ export default function CreateURL() {
           </div>
         </form>
 
+        <div className="flex items-center justify-between px-2 py-2 text-gray-600">
+          <span>Recent 5 URL</span>
+          <Link className="text-indigo-700 hover:text-indigo-800" to='/view'>View all URL</Link>
+        </div>
         {/* URLs Table */}
         {!getUrl.isLoading && uData.length > 0 ? (
           <div className="grid gap-4">
