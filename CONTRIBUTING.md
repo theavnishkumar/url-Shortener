@@ -94,7 +94,7 @@ Have ideas to improve this project? Feel free to open an issue to discuss.
 
 ### License
 
-By contributing, you agree that your contributions will be licensed under the [MIT License](../LICENSE).
+By contributing, you agree that your contributions will be licensed under the [MIT License](./LICENSE).
 
 ---
 
