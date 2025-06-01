@@ -107,7 +107,7 @@ const URLTable = ({ item, handleCopy, handleShare, handleDelete }) => {
               <QrCode size={16} />
             </button>
             <Link
-              to="/analytics"
+              to={`/analytics/${item._id}`}
               className="p-1 text-gray-400 hover:text-gray-600"
               title="View Analytics"
             >

@@ -4,6 +4,7 @@ import MainLayout from "../layout/MainLayout";
 import Profile from "../pages/Profile";
 import ViewURL from "../pages/ViewURL";
 import Analytics from "../pages/Analytics";
+import { AnalyticsID } from "../pages/AnalyticsID";
 
 export const protectedRouter = [
   {
@@ -26,6 +27,10 @@ export const protectedRouter = [
       {
         path: "/analytics",
         element: <Analytics />,
+      },
+      {
+        path: "/analytics/:id",
+        element: <AnalyticsID />,
       },
     ],
   },

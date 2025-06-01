@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getUrlAnalytics } from "../api/url";
+import { getAnalyticsID } from "../api/url";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -23,6 +23,8 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { LoadingSpinner } from "../components/LoadingSpinner";
+import { useParams } from "react-router";
+import ErrorPage from "../ErrorPage";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -35,13 +37,16 @@ ChartJS.register(
   BarElement
 );
 
-const Analytics = () => {
-  const { data, isLoading } = useQuery({
-    queryKey: ["analyticsUrl"],
-    queryFn: getUrlAnalytics,
+export const AnalyticsID = () => {
+  const { id } = useParams();
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["analyticsid", id],
+    queryFn: () => getAnalyticsID(id),
+    retry: false,
   });
 
   if (isLoading) return <LoadingSpinner />;
+  if (isError) return <ErrorPage />;
 
   // percentages for country stats
   const totalCountryClicks = data?.countryStats?.reduce(
@@ -169,7 +174,7 @@ const Analytics = () => {
       <main className="p-4 sm:p-6 lg:p-8">
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-gray-900">
-            Analytics
+            Analytics by URL
           </h1>
           <p className="text-gray-500">
             Track the performance of all your shortened URLs
@@ -415,5 +420,3 @@ const Analytics = () => {
     </div>
   );
 };
-
-export default Analytics;
