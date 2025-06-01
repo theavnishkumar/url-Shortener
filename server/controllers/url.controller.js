@@ -219,3 +219,144 @@ export const getUrlAnalytics = async (req, res) => {
         res.status(500).json({ error: "Analytics aggregation failed" });
     }
 };
+
+// analytics for single url
+export const getSingleUrlAnalytics = async (req, res) => {
+    await connectDB();
+
+    const { id } = req.params;
+    const userId = req.user.id;
+
+    let urlId;
+    try {
+        urlId = new mongoose.Types.ObjectId(id);
+    } catch (error) {
+        return res.status(400).json({ error: "Invalid URL" });
+    }
+
+    try {
+        const url = await urlData.findOne({ _id: urlId, createdBy: userId });
+
+        if (!url) {
+            return res.status(404).json({ error: "URL not found" });
+        }
+
+        const now = new Date();
+        const startOfToday = new Date(now.setHours(0, 0, 0, 0));
+        const startOfYesterday = new Date(new Date(startOfToday).setDate(startOfToday.getDate() - 1));
+        const startOf7Days = new Date(new Date().setDate(now.getDate() - 6));
+        const startOf30Days = new Date(new Date().setDate(now.getDate() - 29));
+
+        const analytics = await urlData.aggregate([
+            { $match: { _id: urlId } },
+            { $unwind: "$clicks" },
+            {
+                $facet: {
+                    today: [
+                        { $match: { "clicks.clickedAt": { $gte: startOfToday } } },
+                        { $count: "count" }
+                    ],
+                    yesterday: [
+                        {
+                            $match: {
+                                "clicks.clickedAt": {
+                                    $gte: startOfYesterday,
+                                    $lt: startOfToday
+                                }
+                            }
+                        },
+                        { $count: "count" }
+                    ],
+                    last7Days: [
+                        { $match: { "clicks.clickedAt": { $gte: startOf7Days } } },
+                        { $count: "count" }
+                    ],
+                    last30Days: [
+                        { $match: { "clicks.clickedAt": { $gte: startOf30Days } } },
+                        { $count: "count" }
+                    ],
+                    countryStats: [
+                        {
+                            $group: {
+                                _id: "$clicks.location.country",
+                                count: { $sum: 1 }
+                            }
+                        },
+                        { $sort: { count: -1 } }
+                    ],
+                    deviceStats: [
+                        {
+                            $group: {
+                                _id: {
+                                    $cond: [
+                                        {
+                                            $regexMatch: {
+                                                input: "$clicks.userAgent",
+                                                regex: /(Mobi|Android|iPhone|iPad)/i
+                                            }
+                                        },
+                                        "Mobile",
+                                        "Desktop"
+                                    ]
+                                },
+                                count: { $sum: 1 }
+                            }
+                        }
+                    ],
+                    browserStats: [
+                        {
+                            $group: {
+                                _id: {
+                                    $switch: {
+                                        branches: [
+                                            {
+                                                case: { $regexMatch: { input: "$clicks.userAgent", regex: /Chrome/i } },
+                                                then: "Chrome"
+                                            },
+                                            {
+                                                case: { $regexMatch: { input: "$clicks.userAgent", regex: /Firefox/i } },
+                                                then: "Firefox"
+                                            },
+                                            {
+                                                case: { $regexMatch: { input: "$clicks.userAgent", regex: /Safari/i } },
+                                                then: "Safari"
+                                            },
+                                            {
+                                                case: { $regexMatch: { input: "$clicks.userAgent", regex: /Edg/i } },
+                                                then: "Edge"
+                                            },
+                                            {
+                                                case: { $regexMatch: { input: "$clicks.userAgent", regex: /OPR|Opera/i } },
+                                                then: "Opera"
+                                            }
+                                        ],
+                                        default: "Other"
+                                    }
+                                },
+                                count: { $sum: 1 }
+                            }
+                        },
+                        { $sort: { count: -1 } }
+                    ]
+                }
+            }
+        ]);
+
+        const result = analytics[0];
+
+        res.json({
+            today: result.today[0]?.count || 0,
+            yesterday: result.yesterday[0]?.count || 0,
+            last7Days: result.last7Days[0]?.count || 0,
+            last30Days: result.last30Days[0]?.count || 0,
+            countryStats: result.countryStats,
+            deviceStats: result.deviceStats,
+            browserStats: result.browserStats
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Failed to fetch analytics" });
+    }
+};
+
