@@ -59,3 +59,15 @@ export const getUrlAnalytics = async () => {
         throw new Error("Analytics not found");
     }
 }
+
+export const getAnalyticsID = async (id) => {
+    try {
+        const res = await axios.get(`${VITE_ANALYTICS_API}/${id}`,
+            { withCredentials: true }
+        );
+        return res.data;
+    } catch (error) {
+        console.error("Error showing analytics:", error.message);
+        throw new Error("Analytics not found");
+    }
+}
