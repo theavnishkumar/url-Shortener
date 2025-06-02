@@ -2,20 +2,40 @@ import { useState } from "react";
 import { User, Mail, Lock, Camera } from "lucide-react";
 import { AuthContext } from "../contexts/AuthContext";
 import { useContext } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { changePassword } from "../api/user";
 
 export default function Profile() {
   const { user } = useContext(AuthContext);
-
+  const [isError, setIsError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const [formData, setFormData] = useState({
-    name: "Avnish Kumar",
-    email: "avnish@example.com",
     currentPassword: "",
     newPassword: "",
     confirmPassword: "",
   });
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
+  const { mutate, isPending } = useMutation({
+    mutationFn: () => changePassword(formData),
+    onSuccess: () => {
+      setSuccessMessage("Password Changed Successfully");
+      setTimeout(() => {
+        setSuccessMessage("");
+      }, 10000);
+
+      setFormData({
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      });
+    },
+    onError: (error) => {
+      setIsError(error?.response?.data?.error);
+      setTimeout(() => {
+        setIsError("");
+      }, 10000);
+    },
+  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -24,11 +44,22 @@ export default function Profile() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setSuccessMessage("");
-    }, "3000");
+    const { currentPassword, newPassword, confirmPassword } = formData;
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      setIsError("Please enter all fields");
+      setTimeout(() => {
+        setIsError("");
+      }, 10000);
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      setIsError("New password and confirm password do not match.");
+      setTimeout(() => {
+        setIsError("");
+      }, 10000);
+      return;
+    }
+    mutate(formData);
   };
 
   return (
@@ -38,7 +69,7 @@ export default function Profile() {
         {/* Page content */}
         <main className="p-4 sm:p-6 lg:p-8">
           <div className="mb-6">
-            <h1 className="text-2xl font-bold text-gray-900 md:hidden">
+            <h1 className="text-2xl font-bold text-gray-900">
               Profile Settings
             </h1>
             <p className="text-gray-500">
@@ -228,6 +259,20 @@ export default function Profile() {
                       />
                     </div>
                   </div>
+
+                  {/* Error Message */}
+                  {isError && (
+                    <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
+                      {isError}
+                    </div>
+                  )}
+
+                  {/* Success Message */}
+                  {successMessage && (
+                    <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-md">
+                      {successMessage}
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -243,11 +288,10 @@ export default function Profile() {
                   </button>
                   <button
                     type="submit"
-                    disabled
-                    // disabled={isSubmitting}
+                    disabled={isPending}
                     className="px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {isSubmitting ? "Saving..." : "Save Changes"}
+                    {isPending ? "Saving..." : "Save Changes"}
                   </button>
                 </div>
               </div>
