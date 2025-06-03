@@ -9,11 +9,10 @@ import authRouter from "./routes/auth.js"
 import userRouter from "./routes/user.js"
 import { secureRoute } from "./middlewares/auth.js";
 import redirectUrlRouter from "./routes/redirectUrl.js";
+import contactRouter from "./routes/contact.js";
 
 connectDB();
 
-
-// eslint-disable-next-line no-undef
 const PORT = process.env.PORT || 4000;
 const app = express();
 app.use(express.json());
@@ -28,10 +27,7 @@ app.use('/redirect/', redirectUrlRouter);
 app.use('/auth/', authRouter);
 app.use('/url/', secureRoute, urlRouter);
 app.use('/user/', secureRoute, userRouter)
-
-app.get('/test', async (req, res) => {
-    res.send("hello");
-});
+app.use('/contact', contactRouter);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
