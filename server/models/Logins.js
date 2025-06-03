@@ -17,7 +17,7 @@ const loginSchema = new mongoose.Schema({
     loginAt: {
         type: Date,
         default: Date.now,
-        expires: 15778463,
+        expires: 60 * 60 * 24 * 365,
     },
 });
 

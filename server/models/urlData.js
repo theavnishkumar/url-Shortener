@@ -29,7 +29,8 @@ const urlData = new mongoose.Schema({
     },
     createdAt: {
         type: Date,
-        default: Date.now
+        default: Date.now(),
+        expires: 60 * 60 * 24 * 365 * 2,
     },
     ipAddress: String,
     userAgent: String,
