@@ -139,6 +139,14 @@ export default function Navbar() {
                         </p>
                       </div>
                       <Link
+                        to="/contact"
+                        className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 "
+                        onClick={() => setIsProfileOpen(false)}
+                      >
+                        <Mail className="mr-3 h-4 w-4 text-gray-500" />
+                        Contact
+                      </Link>
+                      <Link
                         to="/profile"
                         className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 "
                         onClick={() => setIsProfileOpen(false)}
