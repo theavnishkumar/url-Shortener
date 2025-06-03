@@ -4,7 +4,7 @@ import Login from "../pages/Login";
 import Signup from "../pages/Signup";
 import Landing from "../pages/Landing";
 import About from "../pages/About";
-import Contact from "../pages/Contact";
+import {Contact} from "../pages/Contact";
 
 export const openRouter = [
   {
