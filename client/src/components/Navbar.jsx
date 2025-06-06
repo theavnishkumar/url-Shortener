@@ -17,6 +17,7 @@ import {
   Mail,
   Scale,
 } from "lucide-react";
+import {MdOutlinePrivacyTip} from "react-icons/md"
 import { AuthContext } from "../contexts/AuthContext";
 
 export default function Navbar() {
@@ -155,12 +156,12 @@ export default function Navbar() {
                         Your Profile
                       </Link>
                       <Link
-                        to="/settings"
+                        to="/privacy"
                         className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 "
                         onClick={() => setIsProfileOpen(false)}
                       >
-                        <Settings className="mr-3 h-4 w-4 text-gray-500" />
-                        Settings
+                        <MdOutlinePrivacyTip className="mr-3 h-4 w-4 text-gray-500" />
+                        Privacy
                       </Link>
                       <button
                         className="flex w-full items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 "
@@ -371,9 +372,9 @@ const navMenu = [
     icon: <User className="mr-3 h-5 w-5" />,
   },
   {
-    name: "Settings",
-    link: "/settings",
-    icon: <Settings className="mr-3 h-5 w-5" />,
+    name: "Privacy",
+    link: "/privacy",
+    icon: <MdOutlinePrivacyTip className="mr-3 h-5 w-5" />,
   },
   {
     name: "Home",
