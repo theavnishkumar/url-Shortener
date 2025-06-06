@@ -2,10 +2,10 @@ import {
   ExternalLink,
   Copy,
   Share2,
-  BarChart2,
   Trash2,
   QrCode,
   X,
+  ChartSpline,
 } from "lucide-react";
 import { Link } from "react-router";
 import { QRCodeCanvas } from "qrcode.react";
@@ -61,6 +61,7 @@ const URLTable = ({ item, handleCopy, handleShare, handleDelete }) => {
             </div>
           </div>
           <QRCodeCanvas
+            level={"M"}
             value={`${window.location.origin}/${item.shortId}`}
             size={60}
             className="hidden sm:block cursor-pointer"
@@ -71,6 +72,7 @@ const URLTable = ({ item, handleCopy, handleShare, handleDelete }) => {
           <QRCodeCanvas
             value={`${window.location.origin}/${item.shortId}`}
             size={40}
+            level={"M"}
             className="sm:hidden cursor-pointer max-[420px]:hidden"
             onClick={() =>
               handleOpenModal(`${window.location.origin}/${item.shortId}`)
@@ -85,40 +87,40 @@ const URLTable = ({ item, handleCopy, handleShare, handleDelete }) => {
           <div className="flex space-x-3">
             <button
               onClick={() => handleCopy(item.shortId)}
-              className="p-1 text-gray-400 hover:text-gray-600"
+              className="p-1 text-blue-600 hover:text-blue-800 cursor-pointer"
               title="Copy URL"
             >
-              <Copy size={16} />
+              <Copy size={18} />
             </button>
             <button
               onClick={() => handleShare(item.shortId)}
-              className="p-1 text-gray-400 hover:text-gray-600"
+              className="p-1 text-green-600 hover:text-green-800 cursor-pointer"
               title="Share URL"
             >
-              <Share2 size={16} />
+              <Share2 size={18} />
             </button>
             <button
               onClick={() =>
                 handleOpenModal(`${window.location.origin}/${item.shortId}`)
               }
-              className="p-1 text-gray-400 hover:text-gray-600"
+              className="p-1 text-blue-600 hover:text-blue-800 cursor-pointer"
               title="Share URL"
             >
-              <QrCode size={16} />
+              <QrCode size={18} />
             </button>
             <Link
               to={`/analytics/${item._id}`}
-              className="p-1 text-gray-400 hover:text-gray-600"
+              className="p-1 text-blue-600 hover:text-blue-800"
               title="View Analytics"
             >
-              <BarChart2 size={16} />
+              <ChartSpline size={18} />
             </Link>
             <button
               onClick={() => handleDelete(item._id)}
-              className="p-1 text-gray-400 hover:text-gray-600"
+              className="p-1 text-red-600 hover:text-red-800 cursor-pointer"
               title="Delete URL"
             >
-              <Trash2 size={16} />
+              <Trash2 size={18} />
             </button>
           </div>
         </div>
@@ -144,7 +146,7 @@ const QRCodeModal = ({ isOpen, onClose, shortUrl }) => {
           <X onClick={onClose} />
         </div>
         <div className="flex justify-center mb-4">
-          <QRCodeCanvas value={shortUrl} size={280} />
+          <QRCodeCanvas level={"M"} value={shortUrl} size={280} />
         </div>
         <p className="text-center text-indigo-600 break-all">{shortUrl}</p>
         <div className="mt-4 flex justify-center">
