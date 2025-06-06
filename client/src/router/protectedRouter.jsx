@@ -5,6 +5,7 @@ import Profile from "../pages/Profile";
 import ViewURL from "../pages/ViewURL";
 import Analytics from "../pages/Analytics";
 import { AnalyticsID } from "../pages/AnalyticsID";
+import Privacy from "../pages/Privacy";
 
 export const protectedRouter = [
   {
@@ -31,6 +32,10 @@ export const protectedRouter = [
       {
         path: "/analytics/:id",
         element: <AnalyticsID />,
+      },
+      {
+        path: "/privacy",
+        element: <Privacy />,
       },
     ],
   },
