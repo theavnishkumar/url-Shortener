@@ -3,7 +3,7 @@ import urlData from "../models/urlData.js";
 import { getClientIp, getLocationFromIp } from "../utils/geoDetails.js";
 import mongoose from "mongoose";
 import { connectDB } from "../connection.js";
-import deletedUrl from "../models/deletedUrl.js";
+import { deletedURL } from "../models/deletedURL.js";
 
 
 
@@ -86,7 +86,7 @@ export async function handleDeleteUrl(req, res) {
             return res.status(404).json({ message: "URL not found" });
         }
 
-        const backupUrl = new deletedUrl({
+        const backupUrl = new deletedURL({
             originalUrl: urlToDelete.originalUrl,
             shortId: urlToDelete.shortId,
             createdBy: urlToDelete.createdBy,

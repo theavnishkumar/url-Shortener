@@ -45,4 +45,6 @@ const deletedUrlSchema = new mongoose.Schema({
 
 deletedUrlSchema.index({ deletedAt: 1 }, { expireAfterSeconds: 15552000 });
 
-export default mongoose.model("deletedURL", deletedUrlSchema);
+const deletedURL = mongoose.model("deletedURL", deletedUrlSchema);
+
+export { deletedURL }
