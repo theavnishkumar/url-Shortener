@@ -1,6 +1,8 @@
 import { Users } from "../models/users.js"
 import { connectDB } from "../connection.js";
 import bcrypt from "bcrypt";
+import { Logins } from "../models/Logins.js";
+import mongoose from "mongoose";
 
 
 export const handleGetUser = async (req, res) => {
@@ -62,3 +64,63 @@ export const handleChangePassword = async (req, res) => {
         return res.status(500).json({ error: "Something went wrong. Please try again later." });
     }
 };
+
+export const getLoginHistory = async (req, res) => {
+    try {
+        const userId = req.user.id;
+
+        const logins = await Logins.aggregate([
+            {
+                $match: { userId: new mongoose.Types.ObjectId(userId) }
+            },
+            {
+                $sort: { loginAt: -1 }
+            }
+        ]);
+
+        const formatted = logins.map(login => {
+            const date = new Date(login.loginAt);
+            const formattedDate = date.toLocaleString("en-IN", {
+                timeZone: "Asia/Kolkata",
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: true
+            });
+
+            const location = [
+                login.location?.city,
+                login.location?.region,
+                login.location?.country
+            ].filter(Boolean).join(", ");
+
+            return {
+                id: login._id,
+                dateTime: formattedDate,
+                ipAddress: login.ipAddress || "Unknown",
+                location: location || "Unknown",
+                isp: login.location?.isp || "Unknown",
+                device: getDeviceType(login.userAgent),
+            };
+        });
+
+        res.status(200).json(formatted);
+
+    } catch (error) {
+        console.error("Error fetching login history:", error);
+        res.status(500).json({
+            success: false,
+            message: "Could not fetch login logs"
+        });
+    }
+};
+
+
+function getDeviceType(userAgent = "") {
+    userAgent = userAgent.toLowerCase();
+    if (/mobile|iphone|ipod|android.*mobile|windows phone/.test(userAgent)) return "Mobile";
+    if (/tablet|ipad|android(?!.*mobile)/.test(userAgent)) return "Tablet";
+    return "Desktop";
+}
