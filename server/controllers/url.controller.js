@@ -3,6 +3,7 @@ import urlData from "../models/urlData.js";
 import { getClientIp, getLocationFromIp } from "../utils/geoDetails.js";
 import mongoose from "mongoose";
 import { connectDB } from "../connection.js";
+import deletedUrl from "../models/deletedUrl.js";
 
 
 
@@ -80,11 +81,26 @@ export async function handleDeleteUrl(req, res) {
         await connectDB();
         const { _id } = req.params;
 
-        const deletedUrl = await urlData.findByIdAndDelete(_id);
-
-        if (!deletedUrl) {
+        const urlToDelete = await urlData.findById(_id);
+        if (!urlToDelete) {
             return res.status(404).json({ message: "URL not found" });
         }
+
+        const backupUrl = new deletedUrl({
+            originalUrl: urlToDelete.originalUrl,
+            shortId: urlToDelete.shortId,
+            createdBy: urlToDelete.createdBy,
+            createdAt: urlToDelete.createdAt,
+            ipAddress: urlToDelete.ipAddress,
+            userAgent: urlToDelete.userAgent,
+            location: urlToDelete.location,
+            clicks: urlToDelete.clicks,
+            deletedAt: new Date(),
+        });
+
+        await backupUrl.save();
+
+        await urlData.findByIdAndDelete(_id);
 
         res.status(200).json({ message: "URL deleted successfully" });
     } catch (error) {
