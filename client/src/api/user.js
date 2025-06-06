@@ -13,3 +13,15 @@ export const changePassword = async (formData) => {
         throw error;
     }
 }
+
+export const loginHistory = async () => {
+    try {
+        const res = await axios.get(`${VITE_USER_API}/logins`,
+            { withCredentials: true }
+        );
+        return res.data;
+    } catch (error) {
+        console.log(error?.response?.data?.error || "Can't show login history")
+        throw error;
+    }
+}
