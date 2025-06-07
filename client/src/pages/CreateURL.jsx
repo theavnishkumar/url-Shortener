@@ -1,12 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { saveShortUrl, getUrlData, deleteUrl } from "../api/url";
 import URLTable from "../components/ui/URLTable";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Link } from "react-router";
 
 export default function CreateURL() {
   const queryClient = useQueryClient();
   const inputRef = useRef();
+  const [isError, setIsError] = useState("");
 
   const getUrl = useQuery({
     queryKey: ["shortUrls"],
@@ -20,7 +21,10 @@ export default function CreateURL() {
       if (inputRef.current) inputRef.current.value = "";
     },
     onError: (error) => {
-      console.log("Error: ", error.message);
+      setIsError(error?.response?.data?.message || "something went wrong");
+      setTimeout(() => {
+        setIsError("");
+      }, 10000);
     },
   });
 
@@ -68,7 +72,11 @@ export default function CreateURL() {
         <h1 className="text-2xl font-bold mb-8 text-center mt-4">
           Shorten Your URLs
         </h1>
-
+        {isError && (
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 mb-4 -mt-2 py-3 rounded-md">
+            {isError}
+          </div>
+        )}
         {/* URL Input Form */}
         <form onSubmit={handleSubmit} className="mb-8">
           <div className="flex flex-col sm:flex-row gap-2">
@@ -92,7 +100,9 @@ export default function CreateURL() {
 
         <div className="flex items-center justify-between px-2 py-2 text-gray-600">
           <span>Recent 5 URL</span>
-          <Link className="text-indigo-700 hover:text-indigo-800" to='/view'>View all URL</Link>
+          <Link className="text-indigo-700 hover:text-indigo-800" to="/view">
+            View all URL
+          </Link>
         </div>
         {/* URLs Table */}
         {!getUrl.isLoading && uData.length > 0 ? (
