@@ -8,13 +8,21 @@ import { deletedURL } from "../models/deletedURL.js";
 
 
 export async function handleGenerateUrl(req, res) {
-    const { originalUrl } = req.body;
+    let { originalUrl } = req.body;
 
     if (!originalUrl) {
         return res.status(400).json({ error: "Original URL is required" });
     }
+    if (!originalUrl.startsWith('http://') || !originalUrl.startsWith('https://')) {
+        originalUrl = `https://${originalUrl}`;
+    }
 
     try {
+        const parsedUrl = new URL(originalUrl);
+        const isValidHostname = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(parsedUrl.hostname);
+        if (!isValidHostname) {
+            return res.status(400).json({ message: 'Invalid URL. Please enter a complete URL like "example.com" ' });
+        }
         await connectDB();
         const shortId = nanoid(6);
         const ip = getClientIp(req);
