@@ -12,7 +12,8 @@ export const saveShortUrl = async (originalUrl) => {
         );
         return res.data;
     } catch (error) {
-        console.log("Error creating short url", error.response?.data || error.message)
+        console.log(error?.response?.data?.message || error?.response?.data || error?.message || "Error creating short url")
+        throw error;
     }
 }
 
