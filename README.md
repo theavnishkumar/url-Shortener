@@ -49,16 +49,25 @@ A secure and full-featured URL shortener app built with **MERN stack** (MongoDB,
 
 ### Login Security
 - IP address, location, and user agent are logged on every login.
+- Auto-deletes old login records after 6 months using MongoDB TTL.
 - Tokens are stored in **HTTP-only cookies** for enhanced security.
 
-### Login History (Settings Page)
+### Login History (Privacy Page)
 - Users can view all login records.
+- Logged info includes IP, location, and browser details.
 - Auto-deletion of old login records after 6 months using **MongoDB TTL**.
 
 ### Contact Page
 - Simple contact form for feedback/support.
 - Integration ready for **Resend** (Transactional Email API).
-- Future support for OTP-based verification via email.
+- Future plan: OTP verification via email.
+
+### Safe Deletion of Short URLs
+- Deleted short links are first backed up before being removed.
+- Backup stays for 6 months using MongoDB TTL.
+- Helps with tracking misuse or accidental data loss.
+- Only visible to the owner and admin if needed.
+- If a user deletes a link by mistake, they can contact the admin via the Contact Page to request restoration.
 
 ---
 
