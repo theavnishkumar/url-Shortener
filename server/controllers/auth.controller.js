@@ -110,6 +110,15 @@ export const handleUserSignup = async (req, res) => {
             maxAge: 7 * 24 * 60 * 60 * 1000,
         })
 
+        const login = new Logins({
+            userId: newUser._id,
+            ipAddress: ip,
+            userAgent,
+            location,
+            loginAt: new Date(),
+        })
+        await login.save();
+
         return res.status(201).json({ message: "User registered successfully" });
     } catch (err) {
         console.log(err);
