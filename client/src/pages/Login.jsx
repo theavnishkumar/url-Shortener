@@ -20,6 +20,7 @@ const Login = () => {
   }, [user, loading, navigate]);
 
   const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,7 +31,11 @@ const Login = () => {
       });
       await fetchUser();
     } catch (err) {
-      console.log(err);
+      console.log(err.response.data.error);
+      setIsError(err.response.data.error || "something went wrong");
+      setTimeout(() => {
+        setIsError("");
+      }, 10000);
     } finally {
       setIsLoading(false);
     }
@@ -98,6 +103,11 @@ const Login = () => {
                   required
                 />
               </div>
+              {isError && (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 mb-4 -mt-2 py-3 rounded-md">
+                  {isError}
+                </div>
+              )}
 
               <button
                 type="submit"
