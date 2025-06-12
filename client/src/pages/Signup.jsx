@@ -16,7 +16,7 @@ const Signup = () => {
 
   useEffect(() => {
     if (!loading && user) {
-      navigate("/");
+      navigate("/create");
     }
   }, [user, loading, navigate]);
 
