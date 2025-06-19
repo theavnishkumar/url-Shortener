@@ -17,7 +17,7 @@ import {
   Mail,
   Scale,
 } from "lucide-react";
-import {MdOutlinePrivacyTip} from "react-icons/md"
+import { MdOutlinePrivacyTip } from "react-icons/md";
 import { AuthContext } from "../contexts/AuthContext";
 
 export default function Navbar() {
@@ -112,8 +112,8 @@ export default function Navbar() {
                       {user.avatar ? (
                         <img
                           src={
-                            user.avatar ||
-                            "https://avatar.iran.liara.run/public/7"
+                            // user.avatar ||
+                            `https://ui-avatars.com/api/?name=${user.name}`
                           }
                           alt={user.name}
                           className="h-full w-full object-cover"
