@@ -229,7 +229,8 @@ export default function Navbar() {
               <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
                 {user.avatar ? (
                   <img
-                    src={user.avatar}
+                    // src={user.avatar}
+                    src={`https://ui-avatars.com/api/?name=${user.name}`}
                     alt={user.name}
                     className="h-full w-full object-cover"
                   />
