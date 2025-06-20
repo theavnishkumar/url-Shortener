@@ -1,4 +1,4 @@
-import React from "react";
+import { Link } from "react-router";
 
 const Footer = () => {
   return (
@@ -11,15 +11,24 @@ const Footer = () => {
             </p>
           </div>
           <div className="flex space-x-6">
-            <a href="#" className="text-sm text-gray-500 hover:text-gray-700">
-              Privacy Policy
-            </a>
-            <a href="#" className="text-sm text-gray-500 hover:text-gray-700">
-              Terms of Service
-            </a>
-            <a href="#" className="text-sm text-gray-500 hover:text-gray-700">
+            <Link
+              to="/about"
+              className="text-sm text-gray-500 hover:text-gray-700"
+            >
+              About
+            </Link>
+            <Link
+              to="/legal"
+              className="text-sm text-gray-500 hover:text-gray-700"
+            >
+              Legal
+            </Link>
+            <Link
+              to="/contact"
+              className="text-sm text-gray-500 hover:text-gray-700"
+            >
               Contact Us
-            </a>
+            </Link>
           </div>
         </div>
       </div>
