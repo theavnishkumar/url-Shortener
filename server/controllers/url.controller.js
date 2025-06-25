@@ -13,7 +13,7 @@ export async function handleGenerateUrl(req, res) {
     if (!originalUrl) {
         return res.status(400).json({ error: "Original URL is required" });
     }
-    if (!originalUrl.startsWith('http://') || !originalUrl.startsWith('https://')) {
+    if (!originalUrl.startsWith('http://') && !originalUrl.startsWith('https://')) {
         originalUrl = `https://${originalUrl}`;
     }
 
