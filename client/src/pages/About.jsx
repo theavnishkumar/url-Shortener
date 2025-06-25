@@ -6,7 +6,7 @@ export default function About() {
   return (
     <>
       {/* meta tags */}
-      {/* <title>
+      <title>
         About | URL Shortener Project by Avnish Kumar - Full Stack MERN
         Developer
       </title>
@@ -18,10 +18,10 @@ export default function About() {
         name="keywords"
         content="URL Shortener, Avnish Kumar, MERN Project, Avnish Kumar Jabalpur, Avnish Kumar Buxar, Avnish Kumar MERN Developer, Avnish Kumar Full Stack Developer, Avnish Kumar Backend Developer, Avnish Kumar Project, URL Shortener Project, Project by Avnish Kumar, Advanced URL Shortener, Web Developer, Final Year Project, Computer Science Project, Short Link Tool, Open Source Project, College Project, CSE Project"
       />
-      <meta name="author" content="Avnish Kumar" /> */}
+      <meta name="author" content="Avnish Kumar" />
 
       {/* Open Graph / Facebook */}
-      {/* <meta
+      <meta
         property="og:title"
         content="About | URL Shortener by Avnish Kumar"
       />
@@ -38,10 +38,10 @@ export default function About() {
       />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
-      <meta property="og:image:alt" content="URL Shortener by Avnish Kumar" /> */}
+      <meta property="og:image:alt" content="URL Shortener by Avnish Kumar" />
 
       {/* Twitter Card */}
-      {/* <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:card" content="summary_large_image" />
       <meta
         name="twitter:title"
         content="About | URL Shortener by Avnish Kumar"
@@ -54,11 +54,11 @@ export default function About() {
         name="twitter:image"
         content="https://url.ihavetech.com/og-image.jpg"
       />
-      <meta name="twitter:creator" content="@theavnishkumar" /> */}
+      <meta name="twitter:creator" content="@theavnishkumar" />
 
       {/* about page code */}
-      <div className="min-h-screen flex flex-col bg-white">
-        <main className="flex-grow">
+      <main className="min-h-screen flex flex-col bg-white">
+        <div className="flex-grow">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div className="text-center mb-12">
               <h1 className="text-4xl font-bold text-gray-900 mb-4">
@@ -281,8 +281,8 @@ export default function About() {
               </div>
             </div>
           </div>
-        </main>
-      </div>
+        </div>
+      </main>
     </>
   );
 }

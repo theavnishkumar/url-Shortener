@@ -3,7 +3,6 @@ import { Link, NavLink } from "react-router";
 import {
   Code,
   User,
-  Settings,
   LogOut,
   Menu,
   X,
@@ -89,8 +88,8 @@ export default function Navbar() {
                   key={item.link}
                   className={({ isActive }) =>
                     isActive
-                      ? "text-indigo-700 hover:text-indigo-900"
-                      : "text-gray-700 hover:text-gray-900"
+                      ? "text-indigo-700 font-medium underline underline-offset-4 hover:text-indigo-900"
+                      : "text-gray-600 font-medium hover:text-gray-900"
                   }
                 >
                   {item.name}
@@ -183,11 +182,11 @@ export default function Navbar() {
               {/* Mobile Menu Button */}
               <button
                 onClick={toggleMenu}
-                className="text-gray-600 hover:text-gray-900 focus:outline-none  md:hidden"
+                className="text-gray-800 hover:text-gray-900 focus:outline-none md:hidden mr-3"
                 aria-expanded={isMenuOpen}
                 aria-label="Toggle menu"
               >
-                <Menu className="h-6 w-6" />
+                <Menu className="h-7 w-7" />
               </button>
             </div>
           </div>
@@ -209,17 +208,17 @@ export default function Navbar() {
       >
         <div className="flex justify-between items-center p-4 border-b border-gray-200">
           <div className="flex items-center space-x-2">
-            <Code className="h-6 w-6 text-gray-700 " />
+            <LinkIcon className="h-6 w-6 text-gray-700 " />
             <span className="text-xl font-bold text-gray-900 ">
               URL Shortener
             </span>
           </div>
           <button
             onClick={() => setIsMenuOpen(false)}
-            className="text-gray-600 hover:text-gray-900 focus:outline-none"
+            className="text-gray-800 hover:text-gray-900 focus:outline-none mr-2"
             aria-label="Close menu"
           >
-            <X className="h-6 w-6" />
+            <X className="h-7 w-7" />
           </button>
         </div>
 
@@ -254,8 +253,8 @@ export default function Navbar() {
                   to={item.link}
                   className={({ isActive }) =>
                     isActive
-                      ? "flex items-center py-2 text-indigo-700  hover:text-indigo-900 font-medium"
-                      : "flex items-center py-2 text-gray-700  hover:text-gray-900 font-medium"
+                      ? "flex items-center py-2 text-indigo-700 underline underline-offset-4 hover:text-indigo-900 font-medium"
+                      : "flex items-center py-2 text-gray-700 hover:text-gray-900 font-medium"
                   }
                   onClick={() => setIsMenuOpen(false)}
                 >
@@ -310,7 +309,7 @@ export default function Navbar() {
               </Link>
               <Link
                 to="/signup"
-                className="block w-full py-2 px-4 text-center bg-indigo-800 text-white rounded-md hover:bg-indigo-700 transition-colors"
+                className="block w-full py-2 px-4 text-center bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Sign up
@@ -324,20 +323,20 @@ export default function Navbar() {
 }
 export const LoginSignup = () => {
   return (
-    <>
-      <Link
-        to="/login"
-        className="px-4 py-2 text-gray-700  border border-gray-300 rounded-md hover:bg-gray-100 transition-colors hidden md:block"
-      >
-        Log in
-      </Link>
-      <Link
-        to="/signup"
-        className="px-4 py-2 bg-indigo-800 text-white  rounded-md hover:bg-indigo-700 transition-colors hidden md:block"
-      >
-        Sign up
-      </Link>
-    </>
+    <div className="hidden md:flex items-center gap-3">
+  <Link
+    to="/login"
+    className="px-4 py-2 text-gray-800 border border-gray-300 rounded-md hover:bg-gray-100 transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-gray-300"
+  >
+    Log in
+  </Link>
+  <Link
+    to="/signup"
+    className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+  >
+    Sign up
+  </Link>
+</div>
   );
 };
 
