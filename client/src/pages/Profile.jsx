@@ -107,7 +107,10 @@ export default function Profile() {
               <div className="flex flex-col sm:flex-row items-center">
                 <div className="relative mb-4 sm:mb-0">
                   <img
-                    src={user.avatar}
+                    src={
+                      // user.avatar
+                      `https://ui-avatars.com/api/?name=${user.name}`
+                    }
                     alt="User avatar"
                     className="h-20 w-20 rounded-full bg-gray-200 mx-auto sm:mx-0"
                   />
