@@ -1,5 +1,6 @@
 import { Link } from "react-router";
 import { ExternalLink, Github, Mail } from "lucide-react";
+import { AdsComponent } from "../components/AdsComponent";
 
 export default function About() {
   return (
@@ -36,6 +37,8 @@ export default function About() {
                 portfolio piece for aspiring developers.
               </p>
             </div>
+
+            <AdsComponent dataAdSlot='1002244889' />
 
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-8">
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">
