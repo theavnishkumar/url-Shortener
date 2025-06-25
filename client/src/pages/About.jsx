@@ -38,7 +38,7 @@ export default function About() {
               </p>
             </div>
 
-            <AdsComponent dataAdSlot='1002244889' />
+            <AdsComponent dataAdSlot="1002244889" className="mb-8" />
 
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-8">
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">
