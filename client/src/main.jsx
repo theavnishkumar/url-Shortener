@@ -8,6 +8,7 @@ import { AuthProvider } from "./contexts/AuthContext.jsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ShortURL from "./pages/ShortURL.jsx";
 import ErrorPage from "./ErrorPage.jsx";
+import RedirectPage from "./pages/RedirectPage.jsx";
 
 const queryClient = new QueryClient();
 const route = createBrowserRouter([
@@ -15,7 +16,7 @@ const route = createBrowserRouter([
   ...protectedRouter,
   {
     path: "/:shortId",
-    element: <ShortURL />,
+    element: <RedirectPage />,
     errorElement: <ErrorPage />,
   },
 ]);
