@@ -1,6 +1,6 @@
 export const LinkRedirectCard = ({ countdown }) => {
   return (
-    <div className="bg-white rounded-md shadow-md p-8 mb-8 border border-gray-100">
+    <div className="bg-white rounded-md shadow-sm p-8 mb-4 border border-gray-100">
       <h1 className="text-3xl font-bold text-gray-900 mb-4">
         Please wait a moment...
       </h1>

@@ -4,7 +4,7 @@ import { Link } from "react-router";
 export const LinkNotFound = ({ shortUrl }) => {
   return (
     <>
-      <div className="bg-white rounded-md shadow-md p-8 mb-8 border border-red-100">
+      <div className="bg-white rounded-md shadow-sm p-8 mb-4 border border-red-100">
         <div className="mb-2">
           <svg
             className="w-32 h-20 mx-auto"

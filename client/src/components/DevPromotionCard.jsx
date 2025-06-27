@@ -3,7 +3,7 @@ import { Link } from "react-router";
 
 export const DevPromotionCard = () => {
   return (
-    <div className="bg-white rounded-md shadow-md p-8 border border-gray-100">
+    <div className="bg-white rounded-md shadow-sm mt-4 p-8 border border-gray-100">
       <div className="flex items-center justify-center mb-4">
         <Code className="h-6 w-6 text-indigo-600 mr-2" />
         <h2 className="text-xl font-semibold text-gray-900">
