@@ -6,7 +6,6 @@ import { openRouter } from "./router/openRouter.jsx";
 import { protectedRouter } from "./router/protectedRouter.jsx";
 import { AuthProvider } from "./contexts/AuthContext.jsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import ShortURL from "./pages/ShortURL.jsx";
 import ErrorPage from "./ErrorPage.jsx";
 import RedirectPage from "./pages/RedirectPage.jsx";
 

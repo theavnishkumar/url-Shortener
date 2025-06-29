@@ -7,8 +7,8 @@ import {
   CiMonitor,
 } from "react-icons/ci";
 import { useQuery } from "@tanstack/react-query";
-import { loginHistory } from "../api/user";
-import { LoadingSpinner } from "../components/LoadingSpinner";
+import { loginHistory } from "../../api/user";
+import { LoadingSpinner } from "../../components/LoadingSpinner";
 
 export default function Privacy() {
   const { data, isLoading } = useQuery({

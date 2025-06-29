@@ -51,6 +51,117 @@ export async function handleGenerateUrl(req, res) {
     }
 }
 
+// used ai to generate this aggregation
+export const handleDashboardData = async (req, res) => {
+    try {
+        await connectDB();
+
+        const userId = new mongoose.Types.ObjectId(req.user.id);
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+        const stats = await urlData.aggregate([
+            {
+                $match: {
+                    createdBy: userId
+                }
+            },
+            {
+                $addFields: {
+                    clicksCount: { $size: { $ifNull: ["$clicks", []] } },
+                    recentClicks: {
+                        $filter: {
+                            input: "$clicks",
+                            as: "click",
+                            cond: { $gte: ["$$click.clickedAt", sevenDaysAgo] }
+                        }
+                    },
+                    recentClickCount: {
+                        $size: {
+                            $filter: {
+                                input: "$clicks",
+                                as: "click",
+                                cond: { $gte: ["$$click.clickedAt", sevenDaysAgo] }
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                $facet: {
+                    summary: [
+                        {
+                            $group: {
+                                _id: null,
+                                totalUrls: { $sum: 1 },
+                                clicksCount: { $sum: "$clicksCount" },
+                                activeUrls: {
+                                    $sum: {
+                                        $cond: [{ $gt: ["$recentClickCount", 0] }, 1, 0]
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            $addFields: {
+                                averageClickRate: {
+                                    $cond: [
+                                        { $eq: ["$totalUrls", 0] },
+                                        0,
+                                        { $divide: ["$clicksCount", "$totalUrls"] }
+                                    ]
+                                }
+                            }
+                        }
+                    ],
+                    urls: [
+                        {
+                            $match: {
+                                recentClickCount: { $gt: 0 }
+                            }
+                        },
+                        {
+                            $sort: { recentClickCount: -1 }
+                        },
+                        {
+                            $limit: 6
+                        },
+                        {
+                            $project: {
+                                originalUrl: 1,
+                                shortId: 1,
+                                clicksCount: 1
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                $project: {
+                    urls: 1,
+                    totalUrls: { $arrayElemAt: ["$summary.totalUrls", 0] },
+                    clicksCount: { $arrayElemAt: ["$summary.clicksCount", 0] },
+                    averageClickRate: { $arrayElemAt: ["$summary.averageClickRate", 0] },
+                    activeUrls: { $arrayElemAt: ["$summary.activeUrls", 0] }
+                }
+            }
+        ]);
+
+        const result = stats[0] || {
+            totalUrls: 0,
+            clicksCount: 0,
+            averageClickRate: 0,
+            activeUrls: 0,
+            urls: []
+        };
+
+        res.json(result);
+    } catch (error) {
+        console.log("Error in handleGetUrl:", error);
+        res.status(500).json({ message: "Server error" });
+    }
+};
+
 export const handleGetUrl = async (req, res) => {
     try {
         await connectDB();

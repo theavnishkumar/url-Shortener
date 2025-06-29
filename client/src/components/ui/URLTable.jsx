@@ -11,7 +11,13 @@ import { Link } from "react-router";
 import { QRCodeCanvas } from "qrcode.react";
 import { useState } from "react";
 
-const URLTable = ({ item, handleCopy, handleShare, handleDelete }) => {
+const URLTable = ({
+  item,
+  handleCopy,
+  handleShare,
+  handleDelete,
+  isDeleting,
+}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUrl, setSelectedUrl] = useState("");
   const handleOpenModal = (url) => {
@@ -23,6 +29,18 @@ const URLTable = ({ item, handleCopy, handleShare, handleDelete }) => {
     setSelectedUrl("");
     setIsModalOpen(false);
   };
+
+  if (isDeleting) {
+    return (
+      <div className="w-full text-center">
+        <div className="rounded-md p-8 border border-gray-200">
+          <div className="flex justify-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white rounded-md shadow border border-gray-200 p-4">

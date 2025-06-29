@@ -1,7 +1,7 @@
 import ErrorPage from "../ErrorPage";
 import OpenLayout from "../layout/OpenLayout";
-import Login from "../pages/Login";
-import Signup from "../pages/Signup";
+import Login from "../pages/Auth/Login";
+import Signup from "../pages/Auth/Signup";
 import Landing from "../pages/Landing";
 import About from "../pages/About";
 import { Contact } from "../pages/Contact";

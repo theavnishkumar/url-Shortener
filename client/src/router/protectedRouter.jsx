@@ -5,7 +5,7 @@ import Profile from "../pages/Profile";
 import ViewURL from "../pages/ViewURL";
 import Analytics from "../pages/Analytics";
 import { AnalyticsID } from "../pages/AnalyticsID";
-import Privacy from "../pages/Privacy";
+import Privacy from "../pages/legal/Privacy";
 
 export const protectedRouter = [
   {

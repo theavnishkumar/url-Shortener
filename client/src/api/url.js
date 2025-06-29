@@ -28,6 +28,17 @@ export const getUrlData = async () => {
     }
 }
 
+export const getDashboardData = async () => {
+    try {
+        const res = await axios.get(`${URL_API}/dashboard`,
+            { withCredentials: true }
+        );
+        return res.data;
+    } catch (error) {
+        console.log("Error on getting url data", error.message);
+    }
+}
+
 export const deleteUrl = async (_id) => {
     try {
         const res = await axios.delete(`${URL_API}/${_id}`,

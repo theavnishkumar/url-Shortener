@@ -8,6 +8,7 @@ export default function CreateURL() {
   const queryClient = useQueryClient();
   const inputRef = useRef();
   const [isError, setIsError] = useState("");
+  const [deletingId, setDeletingId] = useState(null);
 
   const getUrl = useQuery({
     queryKey: ["shortUrls"],
@@ -30,6 +31,9 @@ export default function CreateURL() {
 
   const deletMutation = useMutation({
     mutationFn: (_id) => deleteUrl(_id),
+    onMutate: (_id) => {
+      setDeletingId(_id);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["shortUrls"] });
     },
@@ -114,6 +118,7 @@ export default function CreateURL() {
                 handleCopy={handleCopy}
                 handleShare={handleShare}
                 handleDelete={handleDelete}
+                isDeleting={deletingId === item._id}
               />
             ))}
           </div>
@@ -133,9 +138,9 @@ export default function CreateURL() {
 
 const Spinner = () => {
   return (
-    <div className="flex-col gap-4 w-full flex items-center justify-center">
-      <div className="w-20 h-20 border-4 border-transparent text-blue-400 text-4xl animate-spin flex items-center justify-center border-t-blue-400 rounded-full">
-        <div className="w-16 h-16 border-4 border-transparent text-red-400 text-2xl animate-spin flex items-center justify-center border-t-red-400 rounded-full"></div>
+    <div className="flex items-center justify-center">
+      <div className="flex justify-center text-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
       </div>
     </div>
   );

@@ -2,10 +2,11 @@ import { Link } from "react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { deleteUrl, getUrlData } from "../api/url";
 import URLTable from "../components/ui/URLTable";
-import { LoadingSpinner } from "../components/LoadingSpinner";
+import { useState } from "react";
 
 export default function ViewURL() {
   const queryClient = useQueryClient();
+  const [deletingId, setDeletingId] = useState(null);
 
   const getUrl = useQuery({
     queryKey: ["shortUrls"],
@@ -14,6 +15,9 @@ export default function ViewURL() {
 
   const deletMutation = useMutation({
     mutationFn: (_id) => deleteUrl(_id),
+    onMutate: (_id) => {
+      setDeletingId(_id);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["shortUrls"] });
     },
@@ -70,6 +74,7 @@ export default function ViewURL() {
                 handleCopy={handleCopy}
                 handleShare={handleShare}
                 handleDelete={handleDelete}
+                isDeleting={deletingId === item._id}
               />
             ))}
           </div>
