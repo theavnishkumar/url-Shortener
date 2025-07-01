@@ -81,7 +81,7 @@ const Dashboard = () => {
           <p className="text-sm font-medium text-gray-500 mb-1">
             Avg. Click Rate
           </p>
-          <p className="text-2xl font-bold">{data.averageClickRate}</p>
+          <p className="text-2xl font-bold">{data.averageClickRate.toFixed(2)}</p>
           {/* <p className="text-xs text-green-500 mt-2">↑ 0% from last month</p> */}
         </div>
 
