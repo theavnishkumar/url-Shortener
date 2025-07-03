@@ -75,6 +75,9 @@ export const getLoginHistory = async (req, res) => {
             },
             {
                 $sort: { loginAt: -1 }
+            },
+            {
+                $limit: 10
             }
         ]);
 
