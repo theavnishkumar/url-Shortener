@@ -8,9 +8,11 @@ import { AuthProvider } from "./contexts/AuthContext.jsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ErrorPage from "./ErrorPage.jsx";
 import RedirectPage from "./pages/RedirectPage.jsx";
+import { adminRouter } from "./router/adminRouter.jsx";
 
 const queryClient = new QueryClient();
 const route = createBrowserRouter([
+  ...adminRouter,
   ...openRouter,
   ...protectedRouter,
   {
