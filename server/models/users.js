@@ -16,8 +16,13 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    avatar:{
+    avatar: {
         type: String,
+    },
+    role: {
+        type: String,
+        enum: ['user', 'admin'],
+        default: 'user',
     },
     ipAddress: {
         type: String

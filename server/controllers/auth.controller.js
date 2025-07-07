@@ -30,7 +30,7 @@ export const handleUserLogin = async (req, res) => {
         }
 
         // Generating jwt token
-        const token = generateToken(user._id);
+        const token = generateToken(user._id, user.role);
 
         // Set HTTP-only cookie
         res.cookie("auth_token", token, {
@@ -100,7 +100,7 @@ export const handleUserSignup = async (req, res) => {
         await newUser.save();
 
         // Generating jwt token
-        const token = generateToken(newUser._id);
+        const token = generateToken(newUser._id, newUser.role);
 
         // Set HTTP-only cookie
         res.cookie("auth_token", token, {

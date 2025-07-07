@@ -10,6 +10,7 @@ import userRouter from "./routes/user.js"
 import { secureRoute } from "./middlewares/auth.js";
 import redirectUrlRouter from "./routes/redirectUrl.js";
 import contactRouter from "./routes/contact.js";
+import adminRouter from "./routes/admin.js";
 
 connectDB();
 
@@ -27,6 +28,7 @@ app.use('/redirect/', redirectUrlRouter);
 app.use('/auth/', authRouter);
 app.use('/url/', secureRoute, urlRouter);
 app.use('/user/', secureRoute, userRouter)
+app.use('/admin', secureRoute, adminRouter)
 app.use('/contact', contactRouter);
 
 app.listen(PORT, () => {
