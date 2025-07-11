@@ -146,6 +146,7 @@ url-Shortener/
 - Email alerts for logins.
 - OTP-based email verification (via Resend).
 - Export click data and analytics to CSV/Excel.
+- Admin dashboard to manage users.
 
 ---
 
