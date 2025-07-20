@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import { redirectUrl } from "../api/url";
-import { AdsComponent } from "../components/AdsComponent";
+// import { AdsComponent } from "../components/AdsComponent";
 import { LoadingSpinner } from "../components/LoadingSpinner";
 import { LinkRedirectCard } from "../components/RedirectPage/LinkRedirectCard";
 import { DevPromotionCard } from "../components/DevPromotionCard";
@@ -62,7 +62,7 @@ export default function RedirectPage() {
           <LinkRedirectCard countdown={countdown} />
         )}
 
-        <AdsComponent dataAdSlot="6040347430" />
+        {/* <AdsComponent dataAdSlot="6040347430" /> */}
 
         {/* My Promotion */}
         <DevPromotionCard />

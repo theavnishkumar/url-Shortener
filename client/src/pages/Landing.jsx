@@ -7,7 +7,7 @@ import { AuthContext } from "../contexts/AuthContext";
 import { useContext } from "react";
 import Dashboard from "./Dashboard";
 import { LoadingSpinner } from "../components/LoadingSpinner";
-import { AdsComponent } from "../components/AdsComponent";
+// import { AdsComponent } from "../components/AdsComponent";
 
 const Landing = () => {
   const { user, loading } = useContext(AuthContext);
@@ -23,7 +23,7 @@ const Landing = () => {
           {/* Features Section */}
           <Features />
           <div className="max-w-7xl mx-auto p-2">
-            <AdsComponent dataAdSlot="6040347430"/>
+            {/* <AdsComponent dataAdSlot="6040347430"/> */}
           </div>
           {/* How It Works */}
           <HowWork />
