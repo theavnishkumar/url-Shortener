@@ -27,7 +27,7 @@ export default function RedirectPage() {
 
       const timeout = setTimeout(() => {
         window.location.href = data.redirectUrl;
-      }, 10000);
+      }, 5000);
 
       return () => {
         clearInterval(interval);
