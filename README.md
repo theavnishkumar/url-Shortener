@@ -1,4 +1,3 @@
-
 # 🔗 URL Shortener App (MERN Stack)
 
 A secure and full-featured URL shortener app built with **MERN stack** (MongoDB, Express.js, React.js, Node.js). Users can shorten URLs, view analytics, track login history, and manage links, all with enhanced privacy and security.
@@ -27,6 +26,7 @@ A secure and full-featured URL shortener app built with **MERN stack** (MongoDB,
 - Uses `nanoid` to generate unique short IDs.
 - Only logged-in users can create short URLs.
 - Displays QR code for every shortened URL
+- Adsense support (10s waiting time)
 
 ### Dashboard
 - View total links, active links, total clicks, and click-through rate.
