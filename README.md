@@ -2,6 +2,9 @@
 
 A secure and full-featured URL shortener app built with **MERN stack** (MongoDB, Express.js, React.js, Node.js). Users can shorten URLs, view analytics, track login history, and manage links, all with enhanced privacy and security.
 
+![Status](https://img.shields.io/badge/status-in%20progress-yellow)
+---
+
 ## Live Preview 🌐 [Visit Website](https://url.ihavetech.com)
 
 
