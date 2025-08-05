@@ -1,4 +1,5 @@
 import {Link} from "react-router"
+import { useQuery } from "@tanstack/react-query"
 import {
   Users,
   BarChart2,
@@ -9,76 +10,20 @@ import {
   Clock,
   UserCheck,
 } from "lucide-react"
-
-
-const mockUsers = [
-  {
-    id: "1",
-    name: "John Doe",
-    email: "john.doe@example.com",
-    createdAt: "2023-01-15T10:30:00Z",
-    urlCount: 25,
-    totalClicks: 1250,
-    status: "active",
-  },
-  {
-    id: "2",
-    name: "Jane Smith",
-    email: "jane.smith@example.com",
-    createdAt: "2023-02-20T14:45:00Z",
-    urlCount: 18,
-    totalClicks: 890,
-    status: "active",
-  },
-  {
-    id: "3",
-    name: "Mike Johnson",
-    email: "mike.johnson@example.com",
-    createdAt: "2023-03-10T09:15:00Z",
-    urlCount: 42,
-    totalClicks: 2100,
-    status: "active",
-  },
-  {
-    id: "4",
-    name: "Sarah Wilson",
-    email: "sarah.wilson@example.com",
-    createdAt: "2023-04-05T16:20:00Z",
-    urlCount: 12,
-    totalClicks: 560,
-    status: "active",
-  },
-  {
-    id: "5",
-    name: "David Brown",
-    email: "david.brown@example.com",
-    createdAt: "2023-05-12T11:30:00Z",
-    urlCount: 8,
-    totalClicks: 320,
-    status: "suspended",
-  },
-  {
-    id: "6",
-    name: "Emily Davis",
-    email: "emily.davis@example.com",
-    createdAt: "2023-06-18T13:45:00Z",
-    urlCount: 35,
-    totalClicks: 1750,
-    status: "active",
-  },
-]
-
-
-const mockAnalytics = {
-  todayClicks: 1247,
-  yesterdayClicks: 1156,
-  lifetimeClicks: 125847,
-  totalUsers: mockUsers.length,
-  activeUsers: mockUsers.filter((user) => user.status === "active").length,
-  totalUrls: mockUsers.reduce((sum, user) => sum + user.urlCount, 0),
-}
+import { getAdminDashboard } from "../../api/admin"
+import { LoadingSpinner } from "../../components/LoadingSpinner"
 
 export const AdminDashboard=()=> {
+  const { data: dashboardData, isLoading: loading, error } = useQuery({
+    queryKey: ["adminDashboard"],
+    queryFn: getAdminDashboard,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    refetchInterval: 60 * 1000, // refetch every minute
+  });
+
+  if (loading) return <LoadingSpinner />;
+  if (error) return <div className="p-8 text-center text-red-600">Error: {error.message || "Failed to fetch dashboard data"}</div>;
+  if (!dashboardData) return <div className="p-8 text-center">No data available</div>;
 
   const formatDate = (dateString) => {
     const date = new Date(dateString)
@@ -87,15 +32,6 @@ export const AdminDashboard=()=> {
       month: "short",
       day: "numeric",
     })
-  }
-
-  const getStatusBadge = (status) => {
-    if (status === "active") {
-      return <span className="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">Active</span>
-    } else if (status === "suspended") {
-      return <span className="px-2 py-1 text-xs font-medium bg-red-100 text-red-800 rounded-full">Suspended</span>
-    }
-    return <span className="px-2 py-1 text-xs font-medium bg-gray-100 text-gray-800 rounded-full">Unknown</span>
   }
 
   return (
@@ -116,8 +52,11 @@ export const AdminDashboard=()=> {
                 </div>
                 <div>
                   <p className="text-sm font-medium text-gray-500">Today's Clicks</p>
-                  <p className="text-2xl font-bold">{mockAnalytics.todayClicks.toLocaleString()}</p>
-                  <p className="text-xs text-green-500 mt-1">↑ 8% from yesterday</p>
+                  <p className="text-2xl font-bold">{dashboardData.todaysClicks.toLocaleString()}</p>
+                  <p className="text-xs text-green-500 mt-1">
+                    {dashboardData.todaysClicks >= dashboardData.yesterdaysClicks ? '↑' : '↓'} 
+                    {` ${Math.abs(((dashboardData.todaysClicks - dashboardData.yesterdaysClicks) / Math.max(dashboardData.yesterdaysClicks, 1) * 100)).toFixed(1)}% from yesterday`}
+                  </p>
                 </div>
               </div>
             </div>
@@ -129,7 +68,7 @@ export const AdminDashboard=()=> {
                 </div>
                 <div>
                   <p className="text-sm font-medium text-gray-500">Yesterday's Clicks</p>
-                  <p className="text-2xl font-bold">{mockAnalytics.yesterdayClicks.toLocaleString()}</p>
+                  <p className="text-2xl font-bold">{dashboardData.yesterdaysClicks.toLocaleString()}</p>
                   <p className="text-xs text-blue-500 mt-1">Daily average</p>
                 </div>
               </div>
@@ -142,7 +81,7 @@ export const AdminDashboard=()=> {
                 </div>
                 <div>
                   <p className="text-sm font-medium text-gray-500">Lifetime Clicks</p>
-                  <p className="text-2xl font-bold">{mockAnalytics.lifetimeClicks.toLocaleString()}</p>
+                  <p className="text-2xl font-bold">{dashboardData.lifetimeClicks.toLocaleString()}</p>
                   <p className="text-xs text-purple-500 mt-1">All time total</p>
                 </div>
               </div>
@@ -155,8 +94,8 @@ export const AdminDashboard=()=> {
                 </div>
                 <div>
                   <p className="text-sm font-medium text-gray-500">Total Users</p>
-                  <p className="text-2xl font-bold">{mockAnalytics.totalUsers}</p>
-                  <p className="text-xs text-indigo-500 mt-1">{mockAnalytics.activeUsers} active</p>
+                  <p className="text-2xl font-bold">{dashboardData.totalUsers}</p>
+                  <p className="text-xs text-indigo-500 mt-1">{dashboardData.activeUsers} active</p>
                 </div>
               </div>
             </div>
@@ -168,7 +107,7 @@ export const AdminDashboard=()=> {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-gray-500">Total URLs</p>
-                  <p className="text-xl font-bold">{mockAnalytics.totalUrls}</p>
+                  <p className="text-xl font-bold">{dashboardData.totalUrls}</p>
                 </div>
                 <div className="p-2 rounded-full bg-orange-100">
                   <Shield className="h-4 w-4 text-orange-600" />
@@ -180,7 +119,7 @@ export const AdminDashboard=()=> {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-gray-500">Active Users</p>
-                  <p className="text-xl font-bold">{mockAnalytics.activeUsers}</p>
+                  <p className="text-xl font-bold">{dashboardData.activeUsers}</p>
                 </div>
                 <div className="p-2 rounded-full bg-green-100">
                   <UserCheck className="h-4 w-4 text-green-600" />
@@ -193,7 +132,7 @@ export const AdminDashboard=()=> {
                 <div>
                   <p className="text-sm font-medium text-gray-500">Avg Clicks/User</p>
                   <p className="text-xl font-bold">
-                    {Math.round(mockAnalytics.lifetimeClicks / mockAnalytics.totalUsers)}
+                    {dashboardData.avgClicksPerUser.toFixed(1)}
                   </p>
                 </div>
                 <div className="p-2 rounded-full bg-blue-100">
@@ -274,8 +213,8 @@ export const AdminDashboard=()=> {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {mockUsers.map((user) => (
-                    <tr key={user.id} className="hover:bg-gray-50">
+                  {dashboardData.usersList.map((user, index) => (
+                    <tr key={user._id || index} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
                           <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
@@ -295,13 +234,17 @@ export const AdminDashboard=()=> {
                         <div className="text-sm text-gray-900">{user.email}</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {formatDate(user.createdAt)}
+                        {formatDate(user.createdOn)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">{user.urlCount}</div>
-                        <div className="text-xs text-gray-500">{user.totalClicks} clicks</div>
+                        <div className="text-sm text-gray-900">{user.totalUrls}</div>
+                        <div className="text-xs text-gray-500">URLs created</div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">{getStatusBadge(user.status)}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                          Active
+                        </span>
+                      </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <button
                           className="inline-flex items-center px-3 py-1 border border-gray-300 rounded-md text-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
@@ -319,8 +262,8 @@ export const AdminDashboard=()=> {
 
             {/* Users list - Mobile */}
             <div className="md:hidden">
-              {mockUsers.map((user) => (
-                <div key={user.id} className="border-b border-gray-200 p-4">
+              {dashboardData.usersList.map((user, index) => (
+                <div key={user._id || index} className="border-b border-gray-200 p-4">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center">
                       <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center mr-3">
@@ -336,20 +279,22 @@ export const AdminDashboard=()=> {
                         <div className="text-sm text-gray-500">{user.email}</div>
                       </div>
                     </div>
-                    {getStatusBadge(user.status)}
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      Active
+                    </span>
                   </div>
 
                   <div className="grid grid-cols-1 gap-2 text-sm mb-3">
                     <div>
                       <span className="text-gray-500">Created:</span>
-                      <div className="font-medium">{formatDate(user.createdAt)}</div>
+                      <div className="font-medium">{formatDate(user.createdOn)}</div>
                     </div>
                    
                   </div>
                   <div>
                       <span className="text-gray-500">URLs:</span>
                       <div className="font-medium">
-                        {user.urlCount} ({user.totalClicks} clicks)
+                        {user.totalUrls} URLs created
                       </div>
                     </div>
                   <div className="flex justify-end">
@@ -365,11 +310,11 @@ export const AdminDashboard=()=> {
               ))}
             </div>
 
-            {mockUsers.length === 0 && (
+            {dashboardData.usersList.length === 0 && (
               <div className="text-center py-12">
                 <Users className="mx-auto h-12 w-12 text-gray-400" />
                 <h3 className="mt-2 text-sm font-medium text-gray-900">No users found</h3>
-                <p className="mt-1 text-sm text-gray-500">Try adjusting your search or filter criteria.</p>
+                <p className="mt-1 text-sm text-gray-500">No users have registered yet.</p>
               </div>
             )}
           </div>

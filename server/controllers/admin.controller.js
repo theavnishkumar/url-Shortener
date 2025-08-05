@@ -44,7 +44,7 @@ export const getAdminDashboard = async (req, res) => {
     const usersList = await Users.aggregate([
       {
         $lookup: {
-          from: "urldatas",
+          from: "shorturls",
           localField: "_id",
           foreignField: "createdBy",
           as: "urls",
