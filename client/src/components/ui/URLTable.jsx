@@ -6,10 +6,11 @@ import {
   QrCode,
   X,
   ChartSpline,
+  Download,
 } from "lucide-react";
 import { Link } from "react-router";
 import { QRCodeCanvas } from "qrcode.react";
-import { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 const URLTable = ({
   item,
@@ -155,25 +156,164 @@ const URLTable = ({
 export default URLTable;
 
 const QRCodeModal = ({ isOpen, onClose, shortUrl }) => {
+  const qrRef = useRef(null);
+  const [notification, setNotification] = useState('');
+
+  const showNotification = (message) => {
+    setNotification(message);
+    setTimeout(() => setNotification(''), 3000);
+  };
+
+  useEffect(() => {
+    const handleEscape = (event) => {
+      if (event.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleEscape);
+      return () => document.removeEventListener('keydown', handleEscape);
+    }
+  }, [isOpen, onClose]);
+
+  const downloadQR = () => {
+    const canvas = qrRef.current?.querySelector('canvas');
+    if (canvas) {
+      const url = canvas.toDataURL('image/png', 1.0);
+      const link = document.createElement('a');
+      link.download = `qr-code-${shortUrl.split('/').pop()}.png`;
+      link.href = url;
+      link.click();
+      showNotification('QR code downloaded successfully!');
+    }
+  };
+
+  const copyQRCode = async () => {
+    const canvas = qrRef.current?.querySelector('canvas');
+    if (canvas) {
+      canvas.toBlob(async (blob) => {
+        try {
+          await navigator.clipboard.write([
+            new ClipboardItem({ 'image/png': blob })
+          ]);
+          showNotification('QR code copied to clipboard!');
+        } catch (err) {
+          console.error('Failed to copy QR code:', err);
+          showNotification('Failed to copy QR code');
+        }
+      }, 'image/png', 1.0);
+    }
+  };
+
+  const copyUrl = async () => {
+    try {
+      await navigator.clipboard.writeText(shortUrl);
+      showNotification('URL copied to clipboard!');
+    } catch (err) {
+      console.error('Failed to copy URL:', err);
+      showNotification('Failed to copy URL');
+    }
+  };
+
   if (!isOpen) return null;
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-lg">
-      <div className="bg-white p-4 rounded-sm shadow-md border border-gray-300 w-80 md:w-96">
-        <div className="flex justify-between">
-          <h2 className="text-xl font-semibold mb-4">QR Code</h2>
-          <X onClick={onClose} />
-        </div>
-        <div className="flex justify-center mb-4">
-          <QRCodeCanvas level={"M"} value={shortUrl} size={280} />
-        </div>
-        <p className="text-center text-indigo-600 break-all">{shortUrl}</p>
-        <div className="mt-4 flex justify-center">
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/50 p-2 overflow-y-auto"
+      onClick={(e) => e.target === e.currentTarget && onClose()}
+    >
+      <div className="bg-white rounded-xl shadow-2xl border border-gray-200 w-full max-w-sm mx-auto transform transition-all relative my-4 max-h-[90vh] overflow-y-auto">
+        {/* Notification */}
+        {notification && (
+          <div className="absolute -top-10 left-2 right-2 bg-green-500 text-white px-3 py-1.5 rounded-lg text-xs font-medium z-10 shadow-lg">
+            ✓ {notification}
+          </div>
+        )}
+
+        {/* Header */}
+        <div className="flex items-center justify-between p-4 border-b border-gray-100">
+          <div>
+            <h2 className="text-lg font-bold text-gray-900">QR Code</h2>
+            <p className="text-xs text-gray-500">Scan to access your link</p>
+          </div>
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indifo-700"
+            className="p-1.5 hover:bg-gray-100 rounded-full transition-colors"
+            aria-label="Close modal"
           >
-            Close
+            <X className="w-4 h-4 text-gray-500" />
           </button>
+        </div>
+
+        {/* QR Code Section */}
+        <div className="p-4 space-y-4">
+          {/* QR Code Display */}
+          <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-lg p-4">
+            <div className="flex justify-center" ref={qrRef}>
+              <div className="bg-white p-3 rounded-lg shadow-md">
+                <QRCodeCanvas
+                  value={shortUrl}
+                  size={window.innerWidth < 640 ? 140 : 160}
+                  level="M"
+                  includeMargin={true}
+                  fgColor="#1e293b"
+                  bgColor="#ffffff"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* URL Display */}
+          <div className="bg-gray-50 rounded-lg p-3">
+            <div className="flex items-center justify-between bg-white rounded border p-2">
+              <span className="text-indigo-600 font-medium text-xs truncate pr-2">
+                {shortUrl}
+              </span>
+              <button
+                onClick={copyUrl}
+                className="p-1 hover:bg-gray-100 rounded transition-colors flex-shrink-0"
+                title="Copy URL"
+                aria-label="Copy URL to clipboard"
+              >
+                <Copy className="w-3 h-3 text-gray-500" />
+              </button>
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="grid grid-cols-2 gap-2">
+            <button
+              onClick={downloadQR}
+              className="flex items-center justify-center space-x-1.5 px-3 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium text-sm"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span>Download</span>
+            </button>
+            <button
+              onClick={copyQRCode}
+              className="flex items-center justify-center space-x-1.5 px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium border border-gray-200 text-sm"
+            >
+              <Copy className="w-3.5 h-3.5" />
+              <span>Copy QR</span>
+            </button>
+          </div>
+
+          {/* Open Link Button */}
+          <button
+            onClick={() => window.open(shortUrl, '_blank')}
+            className="w-full flex items-center justify-center space-x-1.5 px-3 py-2 bg-white text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium border border-gray-200 text-sm"
+          >
+            <ExternalLink className="w-3.5 h-3.5" />
+            <span>Open Link</span>
+          </button>
+
+          {/* Instructions */}
+          <div className="text-center pt-2">
+            <p className="text-xs text-gray-500">
+              📱 Scan with camera • Press ESC to close
+            </p>
+          </div>
         </div>
       </div>
     </div>
