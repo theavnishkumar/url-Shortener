@@ -1,4 +1,4 @@
-export const LinkRedirectCard = ({ countdown }) => {
+export const LinkRedirectCard = ({ countdown, onSkip }) => {
   return (
     <div className="bg-white rounded-md shadow-sm p-8 mb-4 border border-gray-100">
       <h1 className="text-3xl font-bold text-gray-900 mb-4">
@@ -147,10 +147,72 @@ export const LinkRedirectCard = ({ countdown }) => {
         </svg>
       </div>
 
-      <div className="flex items-center justify-center space-x-2">
-        <div className="bg-indigo-100 text-indigo-800 px-4 py-2 rounded-full font-semibold">
-          Redirecting in {countdown} second{countdown !== 1 ? "s" : ""}
+      {/* Progress bar */}
+      <div className="mb-6">
+        <div className="flex items-center justify-center mb-4">
+          {/* Circular progress indicator */}
+          <div className="relative w-16 h-16">
+            <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 64 64">
+              <circle
+                cx="32"
+                cy="32"
+                r="28"
+                fill="none"
+                stroke="#e5e7eb"
+                strokeWidth="4"
+              />
+              <circle
+                cx="32"
+                cy="32"
+                r="28"
+                fill="none"
+                stroke="#4f46e5"
+                strokeWidth="4"
+                strokeDasharray={`${2 * Math.PI * 28}`}
+                strokeDashoffset={`${2 * Math.PI * 28 * (countdown / 5)}`}
+                className="transition-all duration-1000 ease-linear"
+                strokeLinecap="round"
+              />
+            </svg>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="text-lg font-bold text-indigo-600">{countdown}</span>
+            </div>
+          </div>
         </div>
+        
+        <div className="w-full bg-gray-200 rounded-full h-2">
+          <div 
+            className="bg-indigo-600 h-2 rounded-full transition-all duration-1000 ease-linear"
+            style={{ width: `${((5 - countdown) / 5) * 100}%` }}
+          ></div>
+        </div>
+        <p className="text-xs text-gray-500 mt-2">
+          {Math.round(((5 - countdown) / 5) * 100)}% complete
+        </p>
+      </div>
+
+      <div className="flex flex-col items-center justify-center space-y-4">
+        {countdown > 0 ? (
+          <>
+            <div className="bg-indigo-100 text-indigo-800 px-4 py-2 rounded-full font-semibold">
+              Redirecting in {countdown} second{countdown !== 1 ? "s" : ""}
+            </div>
+            
+            {countdown > 1 && (
+              <button
+                onClick={onSkip}
+                className="text-indigo-600 hover:text-indigo-800 font-medium text-sm underline transition-colors"
+              >
+                Skip waiting and redirect now
+              </button>
+            )}
+          </>
+        ) : (
+          <div className="bg-green-100 text-green-800 px-4 py-2 rounded-full font-semibold flex items-center space-x-2">
+            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-green-600"></div>
+            <span>Redirecting now...</span>
+          </div>
+        )}
       </div>
     </div>
   );

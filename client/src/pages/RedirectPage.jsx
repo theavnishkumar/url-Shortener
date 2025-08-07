@@ -10,7 +10,7 @@ import { LinkNotFound } from "../components/RedirectPage/LinkNotFound";
 
 export default function RedirectPage() {
   const { shortId } = useParams();
-  const [countdown, setCountdown] = useState(10);
+  const [countdown, setCountdown] = useState(5); // Changed from 10 to 5
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["redirect", shortId],
@@ -21,10 +21,27 @@ export default function RedirectPage() {
 
   useEffect(() => {
     if (data?.redirectUrl) {
+      // Validate URL before redirecting
+      try {
+        new URL(data.redirectUrl);
+      } catch {
+        console.error("Invalid redirect URL");
+        return;
+      }
+
       const interval = setInterval(() => {
-        setCountdown((prev) => prev - 1);
+        setCountdown((prev) => {
+          if (prev <= 1) {
+            // When countdown reaches 1, clear interval and redirect
+            clearInterval(interval);
+            window.location.href = data.redirectUrl;
+            return 0;
+          }
+          return prev - 1;
+        });
       }, 1000);
 
+      // Backup redirect in case the interval doesn't work properly
       const timeout = setTimeout(() => {
         window.location.href = data.redirectUrl;
       }, 5000);
@@ -35,6 +52,17 @@ export default function RedirectPage() {
       };
     }
   }, [data]);
+
+  const handleSkip = () => {
+    if (data?.redirectUrl) {
+      try {
+        new URL(data.redirectUrl);
+        window.location.href = data.redirectUrl;
+      } catch {
+        console.error("Invalid redirect URL");
+      }
+    }
+  };
 
   if (isLoading)
     return (
@@ -59,7 +87,10 @@ export default function RedirectPage() {
         {isError ? (
           <LinkNotFound shortUrl={shortId} />
         ) : (
-          <LinkRedirectCard countdown={countdown} />
+          <LinkRedirectCard 
+            countdown={countdown} 
+            onSkip={handleSkip}
+          />
         )}
 
         {/* <AdsComponent dataAdSlot="6040347430" /> */}
