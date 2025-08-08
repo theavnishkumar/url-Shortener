@@ -11,8 +11,11 @@ import { secureRoute } from "./middlewares/auth.js";
 import redirectUrlRouter from "./routes/redirectUrl.js";
 import contactRouter from "./routes/contact.js";
 import adminRouter from "./routes/admin.js";
+import { createIndexes } from "./utils/createIndexes.js";
 
 connectDB();
+
+createIndexes();
 
 const PORT = process.env.PORT || 4000;
 const app = express();
