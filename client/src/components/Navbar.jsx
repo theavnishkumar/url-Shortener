@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useMemo } from "react";
 import { Link, NavLink } from "react-router";
 import {
   Code,
@@ -15,6 +15,7 @@ import {
   ChartSpline,
   Mail,
   Scale,
+  Shield,
 } from "lucide-react";
 import { MdOutlinePrivacyTip } from "react-icons/md";
 import { AuthContext } from "../contexts/AuthContext";
@@ -67,6 +68,12 @@ export default function Navbar() {
     }
   };
 
+  // Memoize navigation menu to prevent recalculation on every render
+  const visibleNavItems = useMemo(() => {
+    const baseItems = user ? navMenu.slice(0, 5) : navMenu.slice(8);
+    return baseItems.filter(item => !item.adminOnly || (item.adminOnly && user?.role === "admin"));
+  }, [user]);
+
   return (
     <>
       <header className="bg-white shadow-sm sticky top-0 z-40">
@@ -82,7 +89,7 @@ export default function Navbar() {
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center space-x-6">
-              {(user ? navMenu.slice(0, 4) : navMenu.slice(7)).map((item) => (
+              {visibleNavItems.map((item) => (
                 <NavLink
                   to={item.link}
                   key={item.link}
@@ -154,6 +161,16 @@ export default function Navbar() {
                         <User className="mr-3 h-4 w-4 text-gray-500" />
                         Your Profile
                       </Link>
+                      {user?.role === "admin" && (
+                        <Link
+                          to="/admin"
+                          className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 "
+                          onClick={() => setIsProfileOpen(false)}
+                        >
+                          <Shield className="mr-3 h-4 w-4 text-gray-500" />
+                          Admin Dashboard
+                        </Link>
+                      )}
                       <Link
                         to="/privacy"
                         className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 "
@@ -247,7 +264,7 @@ export default function Navbar() {
 
         <nav className="p-4">
           <ul className="space-y-1">
-            {(user ? navMenu.slice(0, 4) : navMenu.slice(7)).map((item) => (
+            {visibleNavItems.map((item) => (
               <li key={item.link}>
                 <NavLink
                   to={item.link}
@@ -268,7 +285,7 @@ export default function Navbar() {
           {user ? (
             <div className="mt-6 pt-6 border-t border-gray-200 ">
               <ul className="space-y-4">
-                {navMenu.slice(4, 7).map((item) => (
+                {navMenu.slice(5, 8).map((item) => (
                   <li key={item.link}>
                     <NavLink
                       to={item.link}
@@ -360,6 +377,12 @@ const navMenu = [
     name: "Analytics",
     link: "/analytics",
     icon: <ChartSpline className="mr-3 h-5 w-5" />,
+  },
+  {
+    name: "Admin",
+    link: "/admin",
+    icon: <Shield className="mr-3 h-5 w-5" />,
+    adminOnly: true,
   },
   {
     name: "Contact",
