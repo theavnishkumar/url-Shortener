@@ -130,3 +130,112 @@ export const getAdminDashboard = async (req, res) => {
     res.status(500).json({ message: "Error fetching dashboard data" });
   }
 };
+
+export const getAllUsers = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    const search = req.query.search || "";
+    const sortBy = req.query.sortBy || "signupAt";
+    const sortOrder = req.query.sortOrder === "asc" ? 1 : -1;
+
+    const skip = (page - 1) * limit;
+
+    // Build search query
+    const searchQuery = search
+      ? {
+          $or: [
+            { name: { $regex: search, $options: "i" } },
+            { email: { $regex: search, $options: "i" } }
+          ]
+        }
+      : {};
+
+    // Get total count for pagination
+    const totalUsers = await Users.countDocuments(searchQuery);
+
+    // Get users with their URL counts and click counts
+    const users = await Users.aggregate([
+      { $match: searchQuery },
+      {
+        $lookup: {
+          from: "shorturls",
+          localField: "_id",
+          foreignField: "createdBy",
+          as: "urls",
+          pipeline: [
+            {
+              $project: {
+                _id: 1,
+                clicks: 1,
+                createdAt: 1
+              }
+            }
+          ]
+        }
+      },
+      {
+        $lookup: {
+          from: "logins",
+          localField: "_id",
+          foreignField: "userId",
+          as: "logins",
+          pipeline: [
+            { $sort: { loginAt: -1 } },
+            { $limit: 1 }
+          ]
+        }
+      },
+      {
+        $addFields: {
+          totalUrls: { $size: "$urls" },
+          totalClicks: {
+            $sum: {
+              $map: {
+                input: "$urls",
+                as: "url",
+                in: { $size: { $ifNull: ["$$url.clicks", []] } }
+              }
+            }
+          },
+          lastLogin: { $arrayElemAt: ["$logins.loginAt", 0] },
+          isActive: {
+            $gt: [
+              { $arrayElemAt: ["$logins.loginAt", 0] },
+              { $subtract: [new Date(), 30 * 24 * 60 * 60 * 1000] } // 30 days ago
+            ]
+          }
+        }
+      },
+      {
+        $project: {
+          name: 1,
+          email: 1,
+          role: 1,
+          signupAt: 1,
+          totalUrls: 1,
+          totalClicks: 1,
+          lastLogin: 1,
+          isActive: 1
+        }
+      },
+      { $sort: { [sortBy]: sortOrder } },
+      { $skip: skip },
+      { $limit: limit }
+    ]);
+
+    res.json({
+      users,
+      pagination: {
+        currentPage: page,
+        totalPages: Math.ceil(totalUsers / limit),
+        totalUsers,
+        hasNext: page < Math.ceil(totalUsers / limit),
+        hasPrev: page > 1
+      }
+    });
+  } catch (err) {
+    console.error("Error fetching all users:", err);
+    res.status(500).json({ message: "Error fetching users data" });
+  }
+};

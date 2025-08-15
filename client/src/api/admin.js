@@ -13,3 +13,23 @@ export const getAdminDashboard = async () => {
         throw error;
     }
 };
+
+export const getAllUsers = async (params = {}) => {
+    try {
+        const queryParams = new URLSearchParams({
+            page: params.page || 1,
+            limit: params.limit || 20,
+            search: params.search || "",
+            sortBy: params.sortBy || "signupAt",
+            sortOrder: params.sortOrder || "desc"
+        });
+
+        const res = await axios.get(`${VITE_ADMIN_API}/users?${queryParams}`, {
+            withCredentials: true
+        });
+        return res.data;
+    } catch (error) {
+        console.log(error?.response?.data?.message || "Can't fetch users data");
+        throw error;
+    }
+};

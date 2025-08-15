@@ -152,7 +152,7 @@ export const AdminDashboard=()=> {
                 </div>
                 <div className="mt-4 sm:mt-0">
                   <Link
-                    href="/admin/users"
+                    to="/admin/users"
                     className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                   >
                     View All Users
