@@ -2,6 +2,7 @@ import {Users} from "../models/users.js";
 import urlData from "../models/urlData.js";
 import { Logins } from "../models/Logins.js";
 import { cache } from "../utils/cache.js";
+import mongoose from "mongoose";
 
 export const getAdminDashboard = async (req, res) => {
   try {
@@ -237,5 +238,128 @@ export const getAllUsers = async (req, res) => {
   } catch (err) {
     console.error("Error fetching all users:", err);
     res.status(500).json({ message: "Error fetching users data" });
+  }
+};
+
+export const getUserUrls = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    const sortBy = req.query.sortBy || "createdAt";
+    const sortOrder = req.query.sortOrder === "asc" ? 1 : -1;
+
+    const skip = (page - 1) * limit;
+
+    // Get user info first
+    const user = await Users.findById(userId).select("name email role signupAt");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Get total count for pagination
+    const totalUrls = await urlData.countDocuments({ createdBy: userId });
+
+    // Get user's URLs with click statistics
+    const urls = await urlData.aggregate([
+      { $match: { createdBy: new mongoose.Types.ObjectId(userId) } },
+      {
+        $addFields: {
+          clicksCount: { $size: { $ifNull: ["$clicks", []] } },
+          lastClickedAt: {
+            $max: {
+              $map: {
+                input: "$clicks",
+                as: "click",
+                in: "$$click.clickedAt"
+              }
+            }
+          },
+          recentClicks: {
+            $size: {
+              $filter: {
+                input: "$clicks",
+                as: "click",
+                cond: { 
+                  $gte: [
+                    "$$click.clickedAt", 
+                    { $subtract: [new Date(), 7 * 24 * 60 * 60 * 1000] } // 7 days ago
+                  ] 
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        $project: {
+          originalUrl: 1,
+          shortId: 1,
+          createdAt: 1,
+          clicksCount: 1,
+          lastClickedAt: 1,
+          recentClicks: 1,
+          ipAddress: 1,
+          location: 1
+        }
+      },
+      { $sort: { [sortBy]: sortOrder } },
+      { $skip: skip },
+      { $limit: limit }
+    ]);
+
+    // Get summary statistics
+    const stats = await urlData.aggregate([
+      { $match: { createdBy: new mongoose.Types.ObjectId(userId) } },
+      {
+        $group: {
+          _id: null,
+          totalUrls: { $sum: 1 },
+          totalClicks: { 
+            $sum: { $size: { $ifNull: ["$clicks", []] } }
+          },
+          avgClicksPerUrl: {
+            $avg: { $size: { $ifNull: ["$clicks", []] } }
+          },
+          recentUrls: {
+            $sum: {
+              $cond: [
+                { 
+                  $gte: [
+                    "$createdAt", 
+                    { $subtract: [new Date(), 7 * 24 * 60 * 60 * 1000] }
+                  ] 
+                },
+                1,
+                0
+              ]
+            }
+          }
+        }
+      }
+    ]);
+
+    const summary = stats[0] || {
+      totalUrls: 0,
+      totalClicks: 0,
+      avgClicksPerUrl: 0,
+      recentUrls: 0
+    };
+
+    res.json({
+      user,
+      urls,
+      summary,
+      pagination: {
+        currentPage: page,
+        totalPages: Math.ceil(totalUrls / limit),
+        totalUrls,
+        hasNext: page < Math.ceil(totalUrls / limit),
+        hasPrev: page > 1
+      }
+    });
+  } catch (err) {
+    console.error("Error fetching user URLs:", err);
+    res.status(500).json({ message: "Error fetching user URLs" });
   }
 };
