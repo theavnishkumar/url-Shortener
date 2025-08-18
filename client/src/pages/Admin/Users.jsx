@@ -282,13 +282,14 @@ export const Users = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <div className="flex items-center justify-end space-x-2">
-                        <button
+                        <Link
+                          to={`/admin/users/${user._id}`}
                           className="inline-flex items-center px-3 py-1 border border-gray-300 rounded-md text-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                          title="View User Details"
+                          title="View User URLs"
                         >
                           <Eye className="h-4 w-4 mr-1" />
                           View
-                        </button>
+                        </Link>
                       </div>
                     </td>
                   </tr>
@@ -364,13 +365,14 @@ export const Users = () => {
                 </div>
 
                 <div className="flex justify-end">
-                  <button
+                  <Link
+                    to={`/admin/users/${user._id}`}
                     className="inline-flex items-center px-3 py-1 border border-gray-300 rounded-md text-sm text-gray-700 bg-white hover:bg-gray-50"
-                    title="View User Details"
+                    title="View User URLs"
                   >
                     <Eye className="h-4 w-4 mr-1" />
-                    View Details
-                  </button>
+                    View URLs
+                  </Link>
                 </div>
               </div>
             ))}
