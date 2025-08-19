@@ -1,25 +1,26 @@
-# Security Policy for URL Shortener
 
-## Reporting a Vulnerability
+# Security Policy
 
-If you discover any security vulnerabilities, please report them responsibly by contacting:
+## Reporting Vulnerabilities
 
-Email: hi@theavnishkumar.in
+If you discover a security issue in the URL Shortener project, please report it responsibly:
 
-Please provide as much detail as possible, including:
-- Description of the vulnerability
-- Steps to reproduce
+- **Email:** hi@theavnishkumar.in
+
+Please include:
+- A clear description of the vulnerability
+- Steps to reproduce the issue
 - Potential impact
-- Any relevant logs or screenshots
+- Relevant logs or screenshots (if available)
 
 ## Supported Versions
 
-This security policy covers the latest stable version of the Online Auction System.
+This policy applies to the latest stable release of the URL Shortener app.
 
 ## Response Process
 
 - We will acknowledge your report within 48 hours.
-- We aim to fix the issue as soon as possible.
-- Once fixed, we will publicly disclose the vulnerability responsibly.
+- Critical issues are prioritized and addressed promptly.
+- Once resolved, we will disclose the vulnerability responsibly.
 
-Thank you for helping us keep the project secure!
+Thank you for helping keep this project secure!
