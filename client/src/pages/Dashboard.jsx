@@ -67,13 +67,13 @@ const Dashboard = () => {
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
         <div className="bg-white p-6 rounded-md shadow-sm border border-gray-200">
           <p className="text-sm font-medium text-gray-500 mb-1">Total URLs</p>
-          <p className="text-2xl font-bold">{data.totalUrls}</p>
+          <p className="text-2xl font-bold">{data.totalUrls || 0}</p>
           {/* <p className="text-xs text-green-500 mt-2">↑ 0% from last month</p> */}
         </div>
 
         <div className="bg-white p-6 rounded-md shadow-sm border border-gray-200">
           <p className="text-sm font-medium text-gray-500 mb-1">Total Clicks</p>
-          <p className="text-2xl font-bold">{data.clicksCount}</p>
+          <p className="text-2xl font-bold">{data.clicksCount || 0}</p>
           {/* <p className="text-xs text-green-500 mt-2">↑ 0% from last month</p> */}
         </div>
 
@@ -81,13 +81,13 @@ const Dashboard = () => {
           <p className="text-sm font-medium text-gray-500 mb-1">
             Avg. Click Rate
           </p>
-          <p className="text-2xl font-bold">{data.averageClickRate.toFixed(2)}</p>
+          <p className="text-2xl font-bold">{(data.averageClickRate || 0).toFixed(2)}</p>
           {/* <p className="text-xs text-green-500 mt-2">↑ 0% from last month</p> */}
         </div>
 
         <div className="bg-white p-6 rounded-md shadow-sm border border-gray-200">
           <p className="text-sm font-medium text-gray-500 mb-1">Active URLs</p>
-          <p className="text-2xl font-bold">{data.activeUrls}</p>
+          <p className="text-2xl font-bold">{data.activeUrls || 0}</p>
           {/* <p className="text-xs text-green-500 mt-2">↑ 0% from last month</p> */}
         </div>
       </div>
@@ -159,7 +159,7 @@ const Dashboard = () => {
         </div>
 
         {/* URLs Table */}
-        {!data.urls.isLoading && data.urls.length > 0 ? (
+        {!data.urls?.isLoading && data.urls?.length > 0 ? (
           <div className="grid gap-4">
             {data.urls.map((item) => (
               <URLTable
@@ -172,7 +172,7 @@ const Dashboard = () => {
               />
             ))}
           </div>
-        ) : data.urls.isLoading ? (
+        ) : data.urls?.isLoading ? (
           <div className="flex justify-center items-center py-12 border border-gray-200 rounded-md">
             <div className="max-w-2xl w-full text-center">
               <div className="bg-white rounded-2xl shadow-xl p-8 mb-8 border border-gray-100">

@@ -132,7 +132,7 @@ export const AdminDashboard=()=> {
                 <div>
                   <p className="text-sm font-medium text-gray-500">Avg Clicks/User</p>
                   <p className="text-xl font-bold">
-                    {dashboardData.avgClicksPerUser.toFixed(1)}
+                    {(dashboardData.avgClicksPerUser || 0).toFixed(1)}
                   </p>
                 </div>
                 <div className="p-2 rounded-full bg-blue-100">

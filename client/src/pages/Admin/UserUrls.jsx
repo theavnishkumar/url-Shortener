@@ -172,7 +172,7 @@ export const UserUrls = () => {
               </div>
               <div>
                 <p className="text-sm font-medium text-gray-500">Avg Clicks/URL</p>
-                <p className="text-xl font-bold">{summary.avgClicksPerUrl.toFixed(1)}</p>
+                <p className="text-xl font-bold">{(summary.avgClicksPerUrl || 0).toFixed(1)}</p>
               </div>
             </div>
           </div>
